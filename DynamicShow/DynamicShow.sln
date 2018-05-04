@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anker.DynamicShow", "Anker.DynamicShow\Anker.DynamicShow.csproj", "{92406A9D-8830-45E3-BA90-1E0158A2467E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92406A9D-8830-45E3-BA90-1E0158A2467E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92406A9D-8830-45E3-BA90-1E0158A2467E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92406A9D-8830-45E3-BA90-1E0158A2467E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92406A9D-8830-45E3-BA90-1E0158A2467E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20717614-77AE-417D-B67D-C1F35A88A085}
+	EndGlobalSection
+EndGlobal

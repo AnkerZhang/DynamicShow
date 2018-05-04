@@ -1,0 +1,9 @@
+2018-05-03 16:10:55,262 [1] INFO  Anker.DynamicShow.Startup [(null)] - Startup
+2018-05-03 16:10:59,483 [11] INFO  Anker.DynamicShow.Controllers.ValuesController [(null)] - 认证通过
+2018-05-03 16:10:59,485 [11] INFO  Anker.DynamicShow.Controllers.ValuesController [(null)] - memoryStream.Length0
+2018-05-03 16:10:59,520 [11] ERROR Anker.DynamicShow.Controllers.ValuesController [(null)] - ExceptionRoot element is missing.
+2018-05-03 17:12:30,041 [1] INFO  Anker.DynamicShow.Startup [(null)] - Startup
+2018-05-03 17:12:30,856 [11] INFO  Anker.DynamicShow.Controllers.ValuesController [(null)] - 认证通过
+2018-05-03 17:12:30,860 [11] INFO  Anker.DynamicShow.Controllers.ValuesController [(null)] - memoryStream.Length0
+2018-05-03 17:12:30,903 [11] ERROR Anker.DynamicShow.Controllers.ValuesController [(null)] - ExceptionRoot element is missing.
+2018-05-03 17:12:57,772 [1] INFO  Anker.DynamicShow.Startup [(null)] - Startup
