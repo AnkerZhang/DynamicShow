@@ -1,9 +1,0 @@
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\obj\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.csproj.CoreCompileInputs.cache
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\obj\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.AssemblyInfoInputs.cache
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\obj\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.AssemblyInfo.cs
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\bin\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.deps.json
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\bin\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.dll
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\bin\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.pdb
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\obj\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.dll
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\obj\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.pdb
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.Weixin.MP.CoreDynamicShow.CommonService\obj\Debug\netstandard2.0\Anker.Weixin.MP.CoreDynamicShow.CommonService.csprojResolveAssemblyReference.cache

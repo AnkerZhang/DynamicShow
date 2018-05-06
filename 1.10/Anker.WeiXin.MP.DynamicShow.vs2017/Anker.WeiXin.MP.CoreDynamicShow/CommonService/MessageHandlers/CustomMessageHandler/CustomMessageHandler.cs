@@ -60,6 +60,17 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
             : base(requestMessage)
         {
         }
+        /// <summary>
+        /// 订阅（关注）事件
+        /// </summary>
+        /// <returns></returns>
+        public override IResponseMessageBase OnEvent_Submit_Membercard_User_InfoRequest(RequestMessageEvent_Submit_Membercard_User_Info requestMessage)
+        {
+            log.Info("触发了 欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]+++++++++++");
+            var responseMessage = ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(requestMessage);
+            responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]";
+            return responseMessage;
+        }
         public override void OnExecuting()
         {
             //测试MessageContext.StorageData
@@ -304,7 +315,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
             * return responseMessage;
             */
             var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "这条消息来自DefaultResponseMessage。";
+            responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]";
             return responseMessage;
         }
     }

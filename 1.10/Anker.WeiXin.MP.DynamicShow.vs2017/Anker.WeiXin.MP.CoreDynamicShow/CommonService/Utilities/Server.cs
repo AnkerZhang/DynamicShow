@@ -91,5 +91,18 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities
                 return context;
             }
         }
+
+        public static string GetAbsoluteUri( HttpRequest request)
+        {
+            return new StringBuilder()
+                .Append(request.Scheme)
+                .Append("://")
+                .Append(request.Host)
+                .Append(request.PathBase)
+                .Append(request.Path)
+                .Append(request.QueryString)
+                .ToString();
+        }
+
     }
 }

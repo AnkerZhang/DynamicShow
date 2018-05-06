@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 using Senparc.Weixin;
 using Senparc.Weixin.Exceptions;
+using log4net;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
@@ -22,6 +23,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         private string token;
         private string encodingAESKey;
         SenparcWeixinSetting _senparcWeixinSetting;
+        private ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(OAuth2Controller));
         public OAuth2Controller(IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
             _senparcWeixinSetting = senparcWeixinSetting.Value;
@@ -48,6 +50,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 OAuthApi.GetAuthorizeUrl(appId,
                 "http://www.nbug.xin/oauth2/UserInfoCallback?returnUrl=" + returnUrl.UrlEncode(),
                 state, OAuthScope.snsapi_userinfo);
+            log.Info("OAuthurl:::::::" + ViewBag.OAuthurl);
             ViewData["UrlBase"] =
                 OAuthApi.GetAuthorizeUrl(appId,
                 "http://www.nbug.xin/oauth2/BaseCallback?returnUrl=" + returnUrl.UrlEncode(),
