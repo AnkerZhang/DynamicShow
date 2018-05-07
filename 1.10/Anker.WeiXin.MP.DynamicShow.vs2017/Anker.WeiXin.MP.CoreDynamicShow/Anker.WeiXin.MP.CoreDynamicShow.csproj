@@ -9,6 +9,8 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Senparc.WebSocket" Version="0.4.0" />
     <PackageReference Include="Senparc.Weixin" Version="4.20.3" />
     <PackageReference Include="Senparc.Weixin.MP" Version="14.12.3" />
@@ -23,6 +25,19 @@
 
   <ItemGroup>
     <Folder Include="CommonService\MessageHandlers\CustomMessageHandler\Async\" />
+    <Folder Include="CommonService\MyWebsite\HandlersServer\Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\fonts\简历_.NetCore_2年_北京_张龙.docx">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="CommonService\MyWebsite\DBFile\ip2region.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

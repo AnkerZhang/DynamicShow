@@ -1,0 +1,114 @@
+﻿html.mobile {
+    font-size: 55%;
+}
+
+    html.mobile #main {
+        padding: 1.75em;
+    }
+
+    html.mobile body.page-id-1008 #main {
+        padding: 1em;
+    }
+
+    html.mobile article {
+        padding-bottom: 2em;
+    }
+
+        html.mobile article#singular header,
+        html.mobile article#singular h2 {
+            text-align: center;
+        }
+
+    html.mobile body.page-id-1008 article > header > h2 {
+        font-size: 20px;
+        font-size: 2rem;
+    }
+
+    html.mobile .content p {
+        line-height: 1.5;
+    }
+
+    html.mobile #next-post article {
+        width: 95%;
+    }
+
+    html.mobile .comment-panel {
+        margin-bottom: 1.5em;
+        padding: 1.75em;
+        padding-bottom: 0.25em;
+    }
+
+        html.mobile .comment-panel textarea {
+            height: 75px;
+        }
+
+        html.mobile .comment-panel > header {
+            text-align: left !important;
+            margin-bottom: 1em;
+        }
+
+            html.mobile .comment-panel > header h3 {
+                text-align: left;
+                font-size: 20px;
+                font-size: 2rem;
+            }
+
+            html.mobile .comment-panel > header h4 {
+                font-size: 12px;
+                font-size: 1.2rem;
+            }
+
+            html.mobile .comment-panel > header img {
+                width: 50px;
+                height: 50px;
+            }
+
+            html.mobile .comment-panel > header .wxmp-icon {
+                width: 16px;
+                height: 16px;
+                left: 39px;
+            }
+
+        html.mobile .comment-panel section > header h3 {
+            font-size: 16px;
+            font-size: 1.6rem;
+        }
+
+        html.mobile .comment-panel section > header img {
+            width: 35px;
+            height: 35px;
+        }
+
+        html.mobile .comment-panel section > header .wxmp-icon {
+            width: 12px;
+            height: 12px;
+            left: 28px;
+        }
+
+        html.mobile .comment-panel > section {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+        }
+
+            html.mobile .comment-panel > section section {
+                padding: 0;
+            }
+
+        html.mobile .comment-panel > ul.actions {
+            margin-top: -2.25em;
+            opacity: 1;
+        }
+
+        html.mobile .comment-panel ul.actions li {
+            border-left: none;
+            border-right: none;
+            opacity: .95;
+        }
+
+        html.mobile .comment-panel section > .content p span[data-action=reply] {
+            padding: 0.25em 0.5em;
+            border-radius: 8px;
+        }

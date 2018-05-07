@@ -40,7 +40,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         /// <returns></returns>
         public IActionResult Index(string returnUrl)
         {
-            var state = "JeffreySu-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
+            var state = "Anker-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
             HttpContext.Session.SetString("State", state);//储存随机数到Session
 
             ViewData["returnUrl"] = returnUrl;

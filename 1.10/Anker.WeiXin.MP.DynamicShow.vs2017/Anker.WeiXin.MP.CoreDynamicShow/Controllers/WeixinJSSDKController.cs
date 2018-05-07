@@ -40,7 +40,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
             ViewBag.url = url;
             
-            var state = "JeffreySu-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
+            var state = "Anker-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
             HttpContext.Session.SetString("State", state);//储存随机数到Session
             ViewBag.OAuthurl = OAuthApi.GetAuthorizeUrl(appId,
                 "http://www.nbug.xin/WeixinJSSDK/IndexUserInfo?returnUrl=" + "".UrlEncode(),
@@ -63,7 +63,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         public IActionResult getUrl(string returnUrl)
         {
             returnUrl = "http://www.nbug.xin/WeixinJSSDK/IndexUserInfo";
-            var state = "JeffreySu-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
+            var state = "Anker-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
             HttpContext.Session.SetString("State", state);//储存随机数到Session
             var url= OAuthApi.GetAuthorizeUrl(appId,
                 "http://www.nbug.xin/WeixinJSSDK/IndexUserInfo?returnUrl=" + returnUrl.UrlEncode(),

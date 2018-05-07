@@ -14,6 +14,9 @@ using log4net.Config;
 using System.IO;
 using Senparc.Weixin.MP.Containers;
 using Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities;
+using Microsoft.EntityFrameworkCore;
+using Anker.WeiXin.MP.CoreDynamicShow.Data;
+using Microsoft.Extensions.Logging;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow
 {
@@ -42,10 +45,15 @@ namespace Anker.WeiXin.MP.CoreDynamicShow
             services.AddSession();
             //添加Senparc.Weixin配置文件（内容可以根据需要对应修改）
             services.Configure<SenparcWeixinSetting>(Configuration.GetSection("SenparcWeixinSetting"));
+            services.AddDbContext<DynamicShowContext>(options =>
+            {
+                options.UseMySQL(Configuration.GetConnectionString("MysqlDynamicShow"));
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<SenparcWeixinSetting> senparcWeixinSetting, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -80,6 +88,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow
                 Server.AppDomainAppPath = env.ContentRootPath;// env.ContentRootPath;
             }
             Server.WebRootPath = env.WebRootPath;// env.ContentRootPath;
+            UserContextSeed.SeedAsync(app, loggerFactory).Wait();
         }
     }
 }

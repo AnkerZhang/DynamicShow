@@ -1,0 +1,252 @@
+﻿@model Senparc.Weixin.MP.Helpers.JsSdkUiPackage
+@{
+    ViewData["Title"] = "留言 | AnkerZhang's Blog";
+}
+
+<div id="main" class="container">
+    <article id="singular" class="post-1008 page type-page status-publish hentry" data-post-id="1008">
+        <header>
+            <h1>留言板</h1>
+            <h2>已有 @ViewBag.total 人在此留言</h2>
+            <p></p>
+        </header>
+        <div class="content" >
+            <form id="comment-form" class="comment-panel">
+                <header>
+
+                    <label class="input-group-btn">
+                        <img id="author-gravatar" alt="评论者头像" v-bind:src="src" class="btn btn-default" style="display: inline-block;">
+                    </label>
+                    <hgroup>
+                        <input id="author" name="author" style="font-size: 2.2rem;padding-bottom: 8px;" type="text" placeholder="点击此处输入你的称呼" v-bind:value="author" maxlength="10">
+                        <h4>{{ address }}</h4>
+                    </hgroup>
+                </header>
+
+                <textarea name="content" id="content" aria-required="true" placeholder="你也来说两句吧！点击这里输入留言内容" maxlength="9999"></textarea>
+                <div class="row uniform 50%">
+                    <div class="5u 6u(tablet) 12u(mobile)">
+                        <input name="email" id="email" type="text" placeholder="Email 地址" value="" maxlength="39">
+                    </div>
+                    <div class="5u 6u$(tablet) 12u(mobile)">
+                        <input name="url" id="url" type="text" placeholder="个人主页或微博网址" value="" maxlength="99">
+                    </div>
+                    <div class="2u 4u(tablet) -4u(tablet) 6u(mobile) -3u(mobile)">
+                        <button type="button" @@click="submit()">保存</button>
+                    </div>
+                </div>
+
+                <input type="hidden" name="comment_parent" id="comment_parent" value="0">
+                <input type="hidden" name="country" v-bind:value="country">
+                <input type="hidden" name="province" v-bind:value="province">
+                <input type="hidden" name="city" v-bind:value="city">
+                <p><strong>隐私说明：</strong>你个人主页网址会被公开链接，但 Email 地址不会被公开显示；你的 IP 地址会被保存，但只会公开显示你当前所在的城市名。</p>
+                <p style="color:red">{{message}}</p>
+            </form>
+            <!-- #comment-form -->
+            @foreach (var item in ViewBag.ListUser)
+            {
+                <section id="comment-@item.ID" class="comment even thread-even depth-1 comment-panel" data-comment-id="@item.ID">
+                    <header class="">
+                        <img alt="@item.NickName 的头像" src="@item.Image" style="display: inline-block;">
+                        <hgroup>
+                            <h3>
+                            @if (item.Website != null)
+                            {
+                                <a target="_blank" rel="nofollow external" data-confirm="确认访问评论者的个人网页？" href="@(item.Website)" class="url">@item.NickName</a>
+                            }
+                            else
+                            {
+                                @item.NickName
+                            }
+                            </h3>
+                            <h4><time datetime="@item.Time">@item.Time.ToString("MM月dd日HH:mm")</time>在 @item.address 说：</h4>
+                        </hgroup>
+                    </header>
+                    <div class="content">
+                        <p>@item.Content</p>
+                    </div>
+                    <ul class="actions">
+                        <li data-action="like"><i class="fa fa-heart"></i> 赞同（<span id="comment-@(item.ID)-likes">@item.ticket</span>）</li>
+                        <li data-action="dislike"><i class="fa fa-thumbs-down"></i> 反对</li>
+                        <li data-action="reply"><i class="fa fa-comment"></i> 回复</li>
+                    </ul>
+                    @if (item.Meaages != null && item.Meaages.Count > 0)
+                    {
+                        @foreach (var message in item.Meaages)
+                        {
+                            <section id="comment-@(message.ID)" class="comment byuser comment-author-dandyweng bypostauthor odd alt depth-2 comment-panel" data-comment-id="@(message.ID)">
+                                <header class="">
+                                    <img src="@(message.Image)" alt="@message.NickName 的头像">
+                                    <hgroup>
+                                        <h3><a target="_blank" rel="nofollow external" data-confirm="确认访问评论者的个人网页？" href="@(message.Website)" class="url">@message.NickName</a> </h3>
+                                        <h4><time datetime="@message.Time">@message.Time.ToString("MM月dd日HH:mm")</time>在 @message.address 回复：</h4>
+                                    </hgroup>
+                                </header>
+                                <div class="content">
+                                    <p>@message.Content</p>
+                                </div>
+                            </section>
+                        }
+
+                    }
+                </section>
+            }
+            <nav role="navigation">
+                <ul class="pagination">
+                    @if (ViewBag.Page <= 1)
+                    {
+                        <li class="button"><a class="disabled" href="/Home/Board?page=1">上一页</a></li>
+                        <li><a class="current" href="javascript:;">1</a></li>
+                        <li><a href="/Home/Board?page=2">2</a></li>
+                        <li><a href="/Home/Board?page=3">3</a></li>
+                        <li><span>...</span></li>
+                        <li><a href="/Home/Board?page=@ViewBag.count">@ViewBag.count</a></li>
+                    }
+                    else
+                    {
+                        <li class="button"><a class="" href="/Home/Board?page=@(ViewBag.page-1)">上一页</a></li>
+                        @if (ViewBag.page == 2)
+                        {
+                            <li><a href="/Home/Board?page=2">1</a></li>
+                            <li><a class="current" href="javascript:;">2</a></li>
+                                <li><a href="/Home/Board?page=3">3</a></li>
+                        }
+                        else if (ViewBag.page == 3)
+                        {
+                            <li><a href="/Home/Board?page=1">1</a></li>
+                            <li><a href="/Home/Board?page=2">2</a></li>
+                                <li><a class="current" href="javascript:;">3</a></li>
+                                <li><a href="/Home/Board?page=4">4</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/Home/Board?page=1">1</a></li>
+                            <li><span>...</span></li>
+                            <li><a href="/Home/Board?page=@(ViewBag.page-1)">@(ViewBag.page - 1)</a></li>
+                            <li><a class="current" href="javascript:;">@(ViewBag.page)</a></li>
+                            @if (ViewBag.page < ViewBag.count)
+                            {
+                                <li><a href="/Home/Board?page=@(ViewBag.page+1)">@(ViewBag.page + 1)</a></li>
+                            }
+
+                        }
+                        @if (ViewBag.page + 1 >= ViewBag.count)
+                        {
+
+                        }
+                        else
+                        {
+                            <li><span>...</span></li>
+                            <li><a href="/Home/Board?page=@(ViewBag.count)">@(ViewBag.count)</a></li>
+                        }
+                        
+
+                    }
+                    @if (ViewBag.Page >= ViewBag.count)
+                    {
+                        <li class="button"><a class="disabled" href="/Home/Board?page=@(ViewBag.page)">下一页</a></li>
+                    }
+                    else
+                    {
+                        <li class="button"><a class="" href="/Home/Board?page=@(ViewBag.page+1)">下一页</a></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </article>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#comment-form',
+        data: {
+            address: "",
+            country: "",
+            author: "@Html.Raw(ViewBag.name)",
+            province: "",
+            city: "",
+            message: "",
+            src: "@Html.Raw(ViewBag.images)"
+        },
+        methods: {
+            submit()
+            {
+                var author = $("#author").val().trim();
+                var content = $("#content").val().trim();
+                var email = $("#email").val().trim();
+                var url = $("#url").val().trim();
+                var comment_parent = $("#comment_parent").val().trim();
+                var images = app.src;
+                var formData = new FormData();
+
+                if (author == "") {
+                    app.message = "作者不能为空！";
+                    return;
+                }
+                if (content == "") {
+                    app.message = "内容不能为空！";
+                    return;
+                }
+                if (email == "") {
+                    app.message = "邮箱不能为空！";
+                    return;
+                }
+                formData.append('author', author);
+                formData.append('content', content);
+                formData.append('email', email);
+                formData.append('url', url);
+                formData.append('comment_parent', comment_parent);
+                formData.append('images', images);
+
+                $.ajax({
+                    url: "/Home/Send",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    mimeType: "multipart/form-data",
+                    success: function (data) {
+                        data=JSON.parse(data);
+                        if (data.isSuccess) {
+                            app.message = data.returnMsg;
+                            window.location.reload();
+                        } else {
+                            app.message = data.returnMsg;
+
+                        }
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+
+        }
+    })
+
+    axios({
+        method: 'get',
+        url: '/Home/GetAddress'
+    }).then(function (resp) {
+        app.address = resp.data[3];
+        app.country = resp.data[0];
+        app.province = resp.data[1];
+        app.city = resp.data[2];
+    }).catch(resp => {
+        app.address = "请求失败"
+    });
+    $(function () {
+        $("#file").change(function (e) {
+            var file = e.target.files[0] || e.dataTransfer.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    $("#author-gravatar").attr("src", this.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    })
+</script>
