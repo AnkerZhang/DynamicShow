@@ -4545,60 +4545,6 @@
                     <li data-subtitle="全屏模式" data-action="switch-fullscreen-mode"><i class="fa fa-expand"></i></li>
                 </ul>
             </section>
-
-            <section class="widget intro" data-widget="intro">
-                @Html.Raw(ViewBag.c8)
-            </section>
-            @if (ViewBag.t9 == "true")
-            {
-                @Html.Raw(ViewBag.c9)
-            }
-            <section class="widget comments" data-widget="comments">
-                <div id="comments-list">
-                    <ul>
-                        <li v-for='(a,index) in arr'>
-                            <img v-bind:src="a.image" v-bind:title="a.mages" class="widget-comment-avatar" alt="的头像">
-                            <h4>{{a.nickName}}</h4>
-                            <p>{{a.content}}</p>
-                        </li><!-- #comment-## -->
-                    </ul>
-                </div>
-                <div class="buttons">
-                    <a href="/Home/Board" data-scrolling="stop"><i class="fa fa-bars"></i> 查看更多</a>
-                    <a href="/Home/Board" data-scrolling="stop"><i class="fa fa-pencil-square-o"></i> 写新留言</a>
-                </div>
-            </section>
-
-            <section class="widget gallery" data-widget="gallery">
-                <div id="montage" class="row uniform 0% ready" data-am-widget="paragraph" data-am-paragraph="{ tableScrollable: true, pureview: true }">
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="云南" data-camarts-id="2449" data-camarts-title="永胜山景"><img src="~/Images/77.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="四川" data-camarts-id="523" data-camarts-title="紫金之巅"><img src="~/Images/11.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="台湾" data-camarts-id="1427" data-camarts-title="野柳岬"><img src="~/Images/42.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="黑龙江" data-camarts-id="2787" data-camarts-title="饶河沃野"><img src="~/Images/89.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="新疆" data-camarts-id="4160" data-camarts-title="铁热克提"><img src="~/Images/158.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="四川" data-camarts-id="1996" data-camarts-title="龙海小瀑"><img src="~/Images/64.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="天津" data-camarts-id="3445" data-camarts-title="行摄五大道"><img src="~/Images/118.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="云南" data-camarts-id="2375" data-camarts-title="里格岛掠影"><img src="~/Images/74.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="台湾" data-camarts-id="1374" data-camarts-title="日月潭"><img src="~/Images/40.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="新疆" data-camarts-id="4235" data-camarts-title="喀纳斯印象"><img src="~/Images/164.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="内蒙古" data-camarts-id="3697" data-camarts-title="阴山山脉"><img src="~/Images/133.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="台湾" data-camarts-id="1381" data-camarts-title="中台禅寺"><img src="~/Images/41.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="山东" data-camarts-id="3566" data-camarts-title="黑岛掠影"><img src="~/Images/124.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="甘肃" data-camarts-id="3830" data-camarts-title="鸣沙山月牙泉"><img src="~/Images/141.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="新疆" data-camarts-id="3878" data-camarts-title="星星峡掠影"><img src="~/Images/144.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="新疆" data-camarts-id="3906" data-camarts-title="吐鲁番杂景"><img src="~/Images/148.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="黑龙江" data-camarts-id="2770" data-camarts-title="宝清湿地"><img src="~/Images/88.jpg"></a>
-                    <a class="2u 4u(tablet) am-gallery-item" data-location="新疆" data-camarts-id="4176" data-camarts-title="北疆树林"><img src="~/Images/160.jpg"></a>
-                </div>
-
-            </section>
-
-            <section class="widget footer" data-widget="footer">
-                <p>
-                    © AnkerZhang's Blog 2018 - 2019<br>
-                    Powered by WordPress. <a href="/Home/Changelogs" title="查看网页开发更新日志">Designed and developed by AnkerZhang.</a>
-                </p>
-            </section>
         </div>
     </header>
     @RenderBody()
@@ -4607,20 +4553,41 @@
     <script type="text/javascript" src="~/js1/scripts.js"></script>
 
     <script>
-        var comments = new Vue({
-            el: '#comments-list',
-            data: {
-                arr: []
-            }
-        })
-        axios({
-            method: 'get',
-            url: '/Home/GetTopMeage'
-        }).then(function (resp) {
-            comments.arr = resp.data;
-        }).catch(resp => {
-            console.log(resp);
-        });
+         var comments = new Vue({
+             el: '#comments-list',
+             data: {
+                 arr: []
+             }
+         })
+         axios({
+             method: 'get',
+             url: '/Home/GetTopMeage'
+         }).then(function (resp) {
+             comments.arr = resp.data;
+         }).catch(resp => {
+             console.log(resp);
+         });
+             $(function () {
+                 $.ajax({
+                     url: "/Home/ArticleApi?type=open",
+                     type: "GET",
+                     success: function () {
+
+                     }
+                 })
+
+             timedCount();
+         });
+         function timedCount() {
+                 $.ajax({
+                     url: "/Home/ArticleApi?type=s",
+                     type: "GET",
+                     success: function () {
+
+                     }
+                 })
+             var t = setTimeout("timedCount()", 2000)
+         }
     </script>
 </body>
 </html>

@@ -49,16 +49,17 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public ActionResult OAuth()
         {
+            HttpContext.Session.SetString("AID", "1");
             return Redirect(OAuthApi.GetAuthorizeUrl(appId,
               "http://www.nbug.xin/Home/Index?returnUrl="+"".UrlEncode(),
               "", OAuthScope.snsapi_userinfo));
         }
-        public async Task<IActionResult> Index(string code, string state,string openid)
+        public async Task<IActionResult> Index(string code, string state)
         {
             var url = Server.GetAbsoluteUri(HttpContext.Request);
             ViewBag.url = url;
-
-            //string openid= HttpContext.Session.GetString("openid");
+            string openid= HttpContext.Session.GetString("openid");
+            HttpContext.Session.SetString("AID", "1");
             WeiXinUserInfo weiXinUserInfo = null;
             if (string.IsNullOrEmpty(code))
             {
@@ -66,7 +67,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 {
                     return Redirect("/Home/OAuth");
                 }
-                var user= await _context.WeiXinUserInfo.AsNoTracking().SingleOrDefaultAsync(m => m.openid == openid);
+                var user= await _context.WeiXinUserInfo.FirstOrDefaultAsync(m => m.openid == openid);
                 if (user==null)
                 {
                     return Redirect("/Home/OAuth");
@@ -94,8 +95,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 //如果可以确保安全，可以将access_token存入用户的cookie中，每一个人的access_token是不一样的
                 try
                 {
-                    var user = await _context.WeiXinUserInfo.AsNoTracking().SingleOrDefaultAsync(m => m.openid == openid);
-
+                    var user = await _context.WeiXinUserInfo.FirstOrDefaultAsync(m => m.openid == result.openid);
                     if (user!=null)
                     {
                         weiXinUserInfo = user;
@@ -233,7 +233,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public async Task<JsonResult> Send(SendDataModel data)
         {
-            if (data.author == null || data.content == null || data.email == null)
+            if (data.author == null || data.content == null )
             {
                 return new JsonResult(new { isSuccess = false, returnMsg = "错误" });
             }
@@ -276,7 +276,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                     province = arr[1],
                     city = arr[2],
                     address = arr[3],
-                    Email = data.email,
+                    Email = data.email==null?"": data.email,
                     Website = data.url,
                     Image = data.images,
                     Time = DateTime.Now,
@@ -350,5 +350,55 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             return Content(u.ticket.ToString());
             //}
         }
+
+        public void ArticleApi(string type)
+        {
+            var aid= HttpContext.Session.GetString("AID");
+            var openid = HttpContext.Session.GetString("openid");
+            var user = _context.WeiXinUserInfo.FirstOrDefault(f => f.openid == openid);
+            var article=_context.WeiXinArticle.FirstOrDefault(f => f.ID ==Convert.ToInt32(aid));
+            var articleInfo =_context.WeiXinArticleInfo.FirstOrDefault(f => f.AID ==article&&f.UID== user);
+            if (articleInfo == null)
+            {
+
+                articleInfo = new WeiXinArticleInfo()
+                {
+                    AID = article,
+                    UID = user,
+                    ClockStart = DateTime.Now,
+                    Amount = 1,
+                    OpentNumber = 1,
+                    ClockEnd = DateTime.Now,
+                    SpendingDate = 10 + 1
+                };
+                _context.WeiXinArticleInfo.AddAsync(articleInfo);
+                if (_context.WeiXinArticleInfo.FirstOrDefault(f => f.AID == article && f.UID == user) == null)
+                {
+                    _context.SaveChanges();
+                }
+            }
+            else
+            {
+                switch (type)
+                {
+                    case "open":
+                        articleInfo.OpentNumber = articleInfo.OpentNumber + 1;
+                        articleInfo.ClockEnd = DateTime.Now;
+                        articleInfo.SpendingDate = articleInfo.SpendingDate + 10;
+                        break;
+                    case "s":
+                        articleInfo.Amount = articleInfo.Amount + 2;
+                        articleInfo.ClockEnd = DateTime.Now;
+                        articleInfo.SpendingDate = articleInfo.SpendingDate + 2;
+                        break;
+                    default:
+
+                        break;
+                }
+                _context.Update(articleInfo);
+                _context.SaveChanges();
+            }
+        }
+
     }
 }

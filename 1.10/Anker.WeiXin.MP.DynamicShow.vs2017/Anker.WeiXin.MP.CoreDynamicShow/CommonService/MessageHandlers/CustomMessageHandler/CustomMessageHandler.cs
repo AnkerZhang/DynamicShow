@@ -109,8 +109,9 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                  {
                      responseMessage.Content = WeiXin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMessageHandler.Service.LocationSercice.GetText("测试");
                      return responseMessage;
-                 }).Keyword("异步", () =>
+                 }).Keyword("root", () =>
                  {
+                     responseMessage.Content = "http://www.nbug.xin/Root/Index?openid="+ requestMessage.FromUserName;
                      return responseMessage;
                  }).Keyword("容错", () =>
                  {
