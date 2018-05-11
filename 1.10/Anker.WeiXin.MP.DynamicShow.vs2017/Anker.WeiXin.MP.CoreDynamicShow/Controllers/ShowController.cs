@@ -30,7 +30,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
               "http://www.nbug.xin/Show/Index?art="+ art + "".UrlEncode(),
               "", OAuthScope.snsapi_userinfo));
         }
-        public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+        public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
         {
             
             _host = host;
@@ -39,9 +39,10 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             appId = _senparcWeixinSetting.WeixinAppId;
             appSecret = _senparcWeixinSetting.WeixinAppSecret;
             token = _senparcWeixinSetting.Token;
+            HttpContext = accessor.HttpContext;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-            uid =  Convert.ToInt32(HttpContext.Session.GetString("uid") == "" ? "0" : HttpContext.Session.GetString("uid"));
+            uid =  Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
         public async Task<IActionResult> Index(string art,string code, string state)
         {

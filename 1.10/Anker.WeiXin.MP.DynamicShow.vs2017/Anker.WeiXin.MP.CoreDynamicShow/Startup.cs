@@ -17,6 +17,7 @@ using Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Anker.WeiXin.MP.CoreDynamicShow.Data;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow
 {
@@ -41,8 +42,10 @@ namespace Anker.WeiXin.MP.CoreDynamicShow
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddMvc();
             services.AddSession();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //添加Senparc.Weixin配置文件（内容可以根据需要对应修改）
             services.Configure<SenparcWeixinSetting>(Configuration.GetSection("SenparcWeixinSetting"));
             services.AddDbContext<DynamicShowContext>(options =>

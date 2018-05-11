@@ -25,7 +25,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
     public class ArticleController : BaseController
     {
-        public ArticleController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+        public ArticleController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
         {
             _host = host;
             _context = context;
@@ -34,8 +34,10 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             appSecret = _senparcWeixinSetting.WeixinAppSecret;
             token = _senparcWeixinSetting.Token;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
+            HttpContext = accessor.HttpContext;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == "" ? "0" : HttpContext.Session.GetString("uid"));
+
+            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
         public ActionResult OAuth()
         {
@@ -98,6 +100,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 return Content(ex.Message);
             }
+            HttpContext.Session.SetString("uid", user.ID.ToString());
             user =await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             var artlist=await _context.WeiXinArticle.Where(w => w.userID==user).ToListAsync();
             ViewBag.user = user;

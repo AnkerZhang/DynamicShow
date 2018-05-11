@@ -23,7 +23,6 @@ using Senparc.Weixin;
 using Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities;
 using Senparc.Weixin.MP.Helpers;
 using Senparc.Weixin.Exceptions;
-using Newtonsoft.Json;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {

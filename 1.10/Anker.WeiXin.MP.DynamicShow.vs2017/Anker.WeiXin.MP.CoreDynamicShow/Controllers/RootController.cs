@@ -10,13 +10,14 @@ using Senparc.Weixin.MP.Helpers;
 using Senparc.Weixin.Entities;
 using Microsoft.Extensions.Options;
 using Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities;
+using Microsoft.AspNetCore.Http;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
     public class RootController : BaseController
     {
         
-        public RootController(DynamicShowContext context, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+        public RootController(DynamicShowContext context, IOptions<SenparcWeixinSetting> senparcWeixinSetting,IHttpContextAccessor accessor)
         {
             _context = context;
             _senparcWeixinSetting = senparcWeixinSetting.Value;
@@ -24,7 +25,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             appSecret = _senparcWeixinSetting.WeixinAppSecret;
             token = _senparcWeixinSetting.Token;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
-
+            HttpContext = accessor.HttpContext;
         }
         public async Task<IActionResult> Index(int ID)
         {

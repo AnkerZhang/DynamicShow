@@ -16,17 +16,28 @@ using Senparc.Weixin.HttpUtility;
 using System.Text;
 using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.Exceptions;
+using Anker.WeiXin.MP.CoreDynamicShow.Data;
+using Microsoft.AspNetCore.Hosting;
+using log4net;
+using Microsoft.AspNetCore.Http;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
    
-    public class MenuController : Controller
+    public class MenuController : BaseController
     {
-        SenparcWeixinSetting _senparcWeixinSetting;
-        public MenuController(IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+       
+        public MenuController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
+            _host = host;
+            _context = context;
             _senparcWeixinSetting = senparcWeixinSetting.Value;
-            
+            appId = _senparcWeixinSetting.WeixinAppId;
+            appSecret = _senparcWeixinSetting.WeixinAppSecret;
+            token = _senparcWeixinSetting.Token;
+            encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
+            log = LogManager.GetLogger(Startup.repository.Name, typeof(MenuController));
+            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
         public IActionResult CreateMenu()
         {
@@ -60,7 +71,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public IActionResult DeleteMenu()
         {
-            string token = AccessTokenContainer.GetAccessToken(_senparcWeixinSetting.WxOpenAppId);
+            string token = AccessTokenContainer.GetAccessToken(appId);
             try
             {
                 var result = CommonApi.DeleteMenu(token);
@@ -81,7 +92,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public  IActionResult GetMenuTest()
         {
-            var token = AccessTokenContainer.GetAccessToken(_senparcWeixinSetting.WxOpenAppId);
+            var token = AccessTokenContainer.GetAccessToken(appId);
             var url = string.Format(Config.ApiMpHost + "/cgi-bin/menu/get?access_token={0}", token);
             var jsonString = RequestUtility.HttpGet(url, Encoding.UTF8);
             return Content(jsonString);

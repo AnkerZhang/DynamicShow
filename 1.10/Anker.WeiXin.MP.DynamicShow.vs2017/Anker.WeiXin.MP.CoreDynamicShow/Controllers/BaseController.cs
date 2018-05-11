@@ -1,6 +1,7 @@
 ﻿using Anker.WeiXin.MP.CoreDynamicShow.Data;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Senparc.Weixin.Entities;
@@ -23,6 +24,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         protected ILog log = null;
         protected IHostingEnvironment _host = null;
         protected int uid = 0;
+        protected HttpContext HttpContext;
 
     }
 }
