@@ -49,32 +49,33 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public ActionResult OAuth()
         {
-            HttpContext.Session.SetString("AID", "1");
+            HttpContext.Session.SetString("aid", "1");
             return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-              "http://www.nbug.xin/Home/Index?returnUrl="+"".UrlEncode(),
+              "http://www.nbug.xin/Home/Index?returnUrl=" + "".UrlEncode(),
               "", OAuthScope.snsapi_userinfo));
         }
         public async Task<IActionResult> Index(string code, string state)
         {
             var url = Server.GetAbsoluteUri(HttpContext.Request);
             ViewBag.url = url;
-            string openid= HttpContext.Session.GetString("openid");
+            string uid = HttpContext.Session.GetString("uid");
             HttpContext.Session.SetString("AID", "1");
-            WeiXinUserInfo weiXinUserInfo = null;
+            WeiXinUserModel weiXinUser = null;
             if (string.IsNullOrEmpty(code))
             {
-                if (string.IsNullOrEmpty(openid))
+                if (string.IsNullOrEmpty(uid))
                 {
                     return Redirect("/Home/OAuth");
                 }
-                var user= await _context.WeiXinUserInfo.FirstOrDefaultAsync(m => m.openid == openid);
-                if (user==null)
-                {
-                    return Redirect("/Home/OAuth");
-                }
-                else {
-                    weiXinUserInfo = user;
-                }
+                //var user = await _context.WeiXinUser.FirstOrDefaultAsync(m => m.ID == Convert.ToInt32(uid));
+                //if (user == null)
+                //{
+                //    return Redirect("/Home/OAuth");
+                //}
+                //else
+                //{
+                //    weiXinUser = user;
+                //}
             }
             else
             {
@@ -95,36 +96,41 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 //如果可以确保安全，可以将access_token存入用户的cookie中，每一个人的access_token是不一样的
                 try
                 {
-                    var user = await _context.WeiXinUserInfo.FirstOrDefaultAsync(m => m.openid == result.openid);
-                    if (user!=null)
-                    {
-                        weiXinUserInfo = user;
-                    }
-                    else
-                    {
-                        OAuthUserInfo userInfo = OAuthApi.GetUserInfo(result.access_token, result.openid);
-                        weiXinUserInfo = new WeiXinUserInfo()
-                        {
-                            city = userInfo.city,
-                            headimgurl = userInfo.headimgurl,
-                            country = userInfo.country,
-                            nickname = userInfo.nickname,
-                            openid = userInfo.openid,
-                            province = userInfo.province,
-                            sex = userInfo.sex,
-                            unionid = userInfo.unionid == null ? "" : userInfo.unionid
-                        };
-                        await _context.WeiXinUserInfo.AddAsync(weiXinUserInfo);
-                    }
-                   
-                        
+                    //var user = await _context.WeiXinUser.FirstOrDefaultAsync(m => m.openid == result.openid);
+                    //if (user != null)
+                    //{
+                    //    weiXinUser = user;
+                    //}
+                    //else
+                    //{
+                    //    OAuthUserInfo userInfo = OAuthApi.GetUserInfo(result.access_token, result.openid);
+                    //    weiXinUser = new WeiXinUserModel()
+                    //    {
+                    //        city = userInfo.city,
+                    //        headimgurl = userInfo.headimgurl,
+                    //        country = userInfo.country,
+                    //        nickname = userInfo.nickname,
+                    //        openid = userInfo.openid,
+                    //        province = userInfo.province,
+                    //        sex = userInfo.sex,
+                    //        time = DateTime.Now,
+                    //        userInfoList = new List<WeiXinUserInfoModel>() { new WeiXinUserInfoModel() {
+                    //            logTime=DateTime.Now,
+                    //            remarks="请求/Home/Index"
+                    //        } },
+                    //        unionid = userInfo.unionid == null ? "" : userInfo.unionid
+                    //    };
+                    //    await _context.WeiXinUser.AddAsync(weiXinUser);
+                    //}
+
+
                 }
                 catch (ErrorJsonResultException ex)
                 {
                     return Content(ex.Message);
                 }
             }
-            HttpContext.Session.SetString("openid", weiXinUserInfo.openid);
+            HttpContext.Session.SetString("uid", weiXinUser.ID.ToString());
             ViewBag.t1 = await GetConfig(1, "t");
             ViewBag.c1 = await GetConfig(1, "c");
             ViewBag.t2 = await GetConfig(2, "t");
@@ -140,8 +146,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             string num = await GetConfig(7, "c");
             _context.Update(new ConfigModel { ID = 7, Titlt = "number", Content = (Convert.ToInt32(num) + 1).ToString() });
             await _context.SaveChangesAsync();
-            ViewBag.images = weiXinUserInfo.headimgurl;
-            ViewBag.name = weiXinUserInfo.nickname;
+            ViewBag.images = weiXinUser.headimgurl;
+            ViewBag.name = weiXinUser.nickname;
             ViewBag.c7 = num;
             ViewBag.c10 = await GetConfig(10, "c");
             var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
@@ -151,17 +157,18 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         {
             var url = Server.GetAbsoluteUri(HttpContext.Request);
             ViewBag.url = url;
-            string openid = HttpContext.Session.GetString("openid");
-            if (string.IsNullOrEmpty(openid))
+            string uid = HttpContext.Session.GetString("uid");
+            if (string.IsNullOrEmpty(uid))
             {
                 return Redirect("/Home/OAuth");
             }
-            WeiXinUserInfo weiXinUserInfo = null;
-            weiXinUserInfo = await _context.WeiXinUserInfo.Where(u => u.openid == openid).FirstAsync();
-            if (weiXinUserInfo == null)
-            {
-                return Redirect("/Home/OAuth");
-            }
+            WeiXinUserModel weiXinUser = null;
+            //weiXinUser = await _context.WeiXinUser.Where(u => u.ID == Convert.ToInt32(uid)).FirstAsync();
+            //if (weiXinUser == null)
+            //{
+            //    return Redirect("/Home/OAuth");
+            //}
+            //_context.WeiXinUserInfo.Add(new WeiXinUserInfoModel() { uID = weiXinUser.ID, logTime = DateTime.Now, remarks = "请求 /Home/Board?page=" + page });
             var user = await _context.Users
                 .Include(p => p.Meaages)//包含导航属性Meaages表
                 .Where(m => m.State == 1)
@@ -179,14 +186,18 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ViewBag.c8 = await GetConfig(8, "c");
             ViewBag.t9 = await GetConfig(9, "t");
             ViewBag.c9 = await GetConfig(9, "c");
-            ViewBag.images = weiXinUserInfo.headimgurl;
-            ViewBag.name = weiXinUserInfo.nickname;
+            ViewBag.images = weiXinUser.headimgurl;
+            ViewBag.name = weiXinUser.nickname;
             ViewBag.ListUser = user;
             var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
+            _context.SaveChanges();
             return View(jssdkUiPackage);
         }
         public async Task<IActionResult> Resume()
         {
+            string uid = HttpContext.Session.GetString("uid");
+            //_context.WeiXinUserInfo.Add(new WeiXinUserInfoModel() { uID = Convert.ToInt32(uid), logTime = DateTime.Now, remarks = "/Home/Resume" });
+            await _context.SaveChangesAsync();
             var url = Server.GetAbsoluteUri(HttpContext.Request);
             ViewBag.url = url;
             ViewBag.t8 = await GetConfig(8, "t");
@@ -233,7 +244,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public async Task<JsonResult> Send(SendDataModel data)
         {
-            if (data.author == null || data.content == null )
+            if (data.author == null || data.content == null)
             {
                 return new JsonResult(new { isSuccess = false, returnMsg = "错误" });
             }
@@ -276,7 +287,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                     province = arr[1],
                     city = arr[2],
                     address = arr[3],
-                    Email = data.email==null?"": data.email,
+                    Email = data.email == null ? "" : data.email,
                     Website = data.url,
                     Image = data.images,
                     Time = DateTime.Now,
@@ -351,54 +362,58 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             //}
         }
 
-        public void ArticleApi(string type)
-        {
-            var aid= HttpContext.Session.GetString("AID");
-            var openid = HttpContext.Session.GetString("openid");
-            var user = _context.WeiXinUserInfo.FirstOrDefault(f => f.openid == openid);
-            var article=_context.WeiXinArticle.FirstOrDefault(f => f.ID ==Convert.ToInt32(aid));
-            var articleInfo =_context.WeiXinArticleInfo.FirstOrDefault(f => f.AID ==article&&f.UID== user);
-            if (articleInfo == null)
-            {
+        //public void ArticleApi(string type)
+        //{
+        //    var aid = HttpContext.Session.GetString("aid");
+        //    var uid = HttpContext.Session.GetString("uid");
+        //    var user = _context.WeiXinUser.FirstOrDefault(f => f.openid == uid);
+        //    var article = _context.WeiXinArticle.FirstOrDefault(f => f.ID == Convert.ToInt32(aid));
+        //    var weiXinArticle = article.weiXinArticleList.Where(w => w.ID == Convert.ToInt32(uid)).FirstOrDefault();
+        //    if (weiXinArticle == null)
+        //    {
+        //        weiXinArticle = new WeiXinArticleInfoModel()
+        //        {
+        //            articleID = article.ID,
+        //            userInfoID = user,
+        //            beginTime = DateTime.Now,
+        //            amount = 1,
+        //            opentNumber = 1,
+        //            endTime = DateTime.Now,
+        //            spendingDate = 10 + 1,
+        //            articleInfoLogModel = new List<WeiXinArticleInfoLogModel>(){
+        //                new WeiXinArticleInfoLogModel(){
+        //                    beginTime=DateTime.Now,
+        //                    endTime=DateTime.Now,
+        //                    amount=1,
+        //                    remarks="第一次访问"
 
-                articleInfo = new WeiXinArticleInfo()
-                {
-                    AID = article,
-                    UID = user,
-                    ClockStart = DateTime.Now,
-                    Amount = 1,
-                    OpentNumber = 1,
-                    ClockEnd = DateTime.Now,
-                    SpendingDate = 10 + 1
-                };
-                _context.WeiXinArticleInfo.AddAsync(articleInfo);
-                if (_context.WeiXinArticleInfo.FirstOrDefault(f => f.AID == article && f.UID == user) == null)
-                {
-                    _context.SaveChanges();
-                }
-            }
-            else
-            {
-                switch (type)
-                {
-                    case "open":
-                        articleInfo.OpentNumber = articleInfo.OpentNumber + 1;
-                        articleInfo.ClockEnd = DateTime.Now;
-                        articleInfo.SpendingDate = articleInfo.SpendingDate + 10;
-                        break;
-                    case "s":
-                        articleInfo.Amount = articleInfo.Amount + 2;
-                        articleInfo.ClockEnd = DateTime.Now;
-                        articleInfo.SpendingDate = articleInfo.SpendingDate + 2;
-                        break;
-                    default:
+        //                }
+        //            }
+        //        };
+        //        _context.WeiXinArticleInfo.AddAsync(weiXinArticle);
+        //    }
+        //    else
+        //    {
+        //        switch (type)
+        //        {
+        //            case "open":
+        //                weiXinArticle.opentNumber = weiXinArticle.opentNumber + 1;
+        //                weiXinArticle.endTime = DateTime.Now;
+        //                weiXinArticle.spendingDate = weiXinArticle.spendingDate + 10;
+        //                break;
+        //            case "s":
+        //                weiXinArticle.amount = weiXinArticle.amount + 2;
+        //                weiXinArticle.endTime = DateTime.Now;
+        //                weiXinArticle.spendingDate = weiXinArticle.spendingDate + 2;
+        //                break;
+        //            default:
 
-                        break;
-                }
-                _context.Update(articleInfo);
-                _context.SaveChanges();
-            }
-        }
+        //                break;
+        //        }
+        //        _context.Update(weiXinArticle);
+        //    }
+        //    _context.SaveChanges();
+        //}
 
     }
 }

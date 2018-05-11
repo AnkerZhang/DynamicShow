@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities;
 using log4net;
 using Anker.WeiXin.MP.CoreDynamicShow;
+using System.Diagnostics;
 
 namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMessageHandler
 {
@@ -319,5 +320,74 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
             responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]";
             return responseMessage;
         }
+
+        /// <summary>
+        /// 点击事件
+        /// </summary>
+        /// <param name="requestMessage"></param>
+        /// <returns></returns>
+        public override IResponseMessageBase OnEvent_ClickRequest(RequestMessageEvent_Click requestMessage)
+        {
+            IResponseMessageBase reponseMessage = null;
+            //菜单点击，需要跟创建菜单时的Key匹配
+
+            switch (requestMessage.EventKey)
+            {
+
+                case "SubClickRoot_Text":
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        reponseMessage = strongResponseMessage;
+                        strongResponseMessage.Content = "您点击了子菜单按钮。";
+                    }
+                    break;
+                case "SubClickRoot_PicPhotoOrAlbum":
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        reponseMessage = strongResponseMessage;
+                        strongResponseMessage.Content = "您点击了【微信拍照】按钮。系统将会弹出拍照或者相册发图。";
+                    }
+                    break;
+                case "Description":
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        strongResponseMessage.Content = "测试使用说明";
+                        reponseMessage = strongResponseMessage;
+                    }
+                    break;
+                case "SubClickRoot_ScancodePush":
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        reponseMessage = strongResponseMessage;
+                        strongResponseMessage.Content = "您点击了【微信扫码】按钮。";
+                    }
+                    break;
+                case "ConditionalMenu_Male":
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        reponseMessage = strongResponseMessage;
+                        strongResponseMessage.Content = "您点击了个性化菜单按钮，您的微信性别设置为：男。";
+                    }
+                    break;
+                case "ConditionalMenu_Femle":
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        reponseMessage = strongResponseMessage;
+                        strongResponseMessage.Content = "您点击了个性化菜单按钮，您的微信性别设置为：女。";
+                    }
+                    break;
+                
+                default:
+                    {
+                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                        strongResponseMessage.Content = "您点击了按钮，EventKey：" + requestMessage.EventKey;
+                        reponseMessage = strongResponseMessage;
+                    }
+                    break;
+            }
+
+            return reponseMessage;
+        }
+
     }
 }

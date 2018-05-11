@@ -1,0 +1,146 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加动态</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link href="~/css/bootstrap-theme.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.9.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="~/js/bootstrap.js"></script>
+
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="@ViewBag.user.headimgurl" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">@ViewBag.user.nickname</h4>
+            </div>
+        </div>
+        <form>
+            <div class="form-group">
+                <label >链接标题</label>
+                <input type="text" class="form-control" id="title" placeholder="链接标题">
+            </div>
+            <div class="form-group">
+                <label >作者</label>
+                <input type="text" class="form-control" id="zuozhe" placeholder="作者">
+            </div>
+            <div class="form-group">
+                <label >分享链接小图</label>
+                <img id="xiaoimg" alt="评论者头像" src="/Images/default.png" class="btn btn-default" style="display: inline-block;width:50px;">
+                <input type="file" id="xiaofile">
+            </div>
+            <div class="dropdown form-group">
+                <label >请选择背景音乐</label>
+                <select class="form-control" id="music" name="spec_num" onchange="document.getElementById('input0').value=$('#spec_num0 option:selected').text()">
+                    <option>我想</option>
+                    <option>Champagne</option>
+                    <option>再也没有</option>
+                    <option>七月上</option>
+                    <option>白羊</option>
+                </select>
+            </div>
+            <div id="comment">
+                
+            </div>
+           
+            <button type="button" onclick="addcomment()" class="btn btn-success">添加一组</button>
+            <button type="button"onclick="sub()" class="btn btn-success">提交浏览</button>
+        </form>
+
+
+    </div>
+    <script>
+        var index = 0;
+        function addcomment() {
+            index++;
+            var htmladd = ' <div class="form-group comment">';
+            htmladd += '  <label >内容文字</label>';
+            htmladd += '<input type="text" class="form-control text' + index + '"  placeholder="内容文字">';
+            htmladd += '   <label >插图</label>';
+            htmladd += ' <img  alt="评论者头像" src="/Images/default.png" class="btn btn-default tu' + index + 'img" style="display: inline-block;width:50px;">';
+            htmladd += '  <input type="file"id=tu' + index + 'file class="tu' + index + 'file">';
+            htmladd += ' </div>';
+            $("#comment").append(htmladd);
+            $(".tu" + index+"file").change(function (e) {
+                var file = e.target.files[0] || e.dataTransfer.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        $(".tu" + index+'img').attr("src", this.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        $("#xiaofile").change(function (e) {
+            var file = e.target.files[0] || e.dataTransfer.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    $("#xiaoimg").attr("src", this.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        function sub()
+        {
+            var formData = new FormData();
+            var title = $("#title").val().trim();
+            var zuozhe = $("#zuozhe").val().trim();
+            var xiaofile = document.getElementById("xiaofile").files[0];
+            var music = $("#music").val().trim();
+            formData.append("title", title);
+            formData.append("zuozhe", zuozhe);
+            formData.append("xiaofile", xiaofile);
+            formData.append("music", music);
+            var comment = $(".comment");
+            var strlist = "";
+            var filelist = new Array();
+            for (var i = 0; i < comment.length; i++) {
+                strlist = strlist + $(comment[i]).find("input[type='text']").val() + "^";
+                filelist.push();
+                formData.append('tu' + (i + 1) + 'file', document.getElementById("tu"+(i + 1)+"file").files[0]);
+            }
+            formData.append("strlist", strlist);
+            
+            $.ajax({
+                url: "/Article/AddData",
+                type: "post",
+                data: formData,
+                contentType: false,
+                processData: false,
+                mimeType: "multipart/form-data",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data.isSuccess) {
+                        location.href = "/Show/Index?art=" + data.returnMsg
+                    } else {
+                        app.message = data.returnMsg;
+
+                    }
+                    console.log(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

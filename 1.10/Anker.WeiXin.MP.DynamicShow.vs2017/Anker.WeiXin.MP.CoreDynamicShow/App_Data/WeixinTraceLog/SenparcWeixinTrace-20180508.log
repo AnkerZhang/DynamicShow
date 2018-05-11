@@ -94,3 +94,19 @@
     URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
     errcode：40164
     errmsg：invalid ip 124.65.149.194, not in whitelist hint: [SfIvJA02452974]
+
+[[[接口调用]]]
+[2018/5/8 17:24:03]
+[线程：16]
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    Result：
+{"errcode":40164,"errmsg":"invalid ip 124.65.149.194, not in whitelist hint: [hr.0LA04153612]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/8 17:24:03]
+[线程：16]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    errcode：40164
+    errmsg：invalid ip 124.65.149.194, not in whitelist hint: [hr.0LA04153612]

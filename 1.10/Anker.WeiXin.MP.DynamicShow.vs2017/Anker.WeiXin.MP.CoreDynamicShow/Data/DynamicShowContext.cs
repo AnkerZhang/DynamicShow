@@ -19,14 +19,18 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Data
             modelBuilder.Entity<User>().ToTable("User").HasKey(u => u.ID);
             modelBuilder.Entity<Message>().ToTable("Message").HasKey(u => u.ID);
             modelBuilder.Entity<ConfigModel>().ToTable("ConfigModel").HasKey(u => u.ID);
-            modelBuilder.Entity<WeiXinArticle>().ToTable("WeiXinArticle").HasKey(u => u.ID);
-            modelBuilder.Entity<WeiXinUserInfo>().ToTable("WeiXinUserInfo").HasKey(u => u.ID);
-            modelBuilder.Entity<WeiXinArticleInfo>().ToTable("WeiXinArticleInfo").HasKey(u => u.ID);
+            modelBuilder.Entity<WeiXinUserModel>().ToTable("WeiXinUser").HasKey(u => u.ID);
+            modelBuilder.Entity<WeiXinArticleModel>().ToTable("WeiXinArticle").HasKey(u => u.ID);
+            modelBuilder.Entity<WeiXinUserInfoModel>().ToTable("WeiXinUserInfo").HasKey(u => u.ID);
+            modelBuilder.Entity<WeiXinArticleInfoModel>().ToTable("WeiXinArticleInfo").HasKey(u => u.ID);
+            modelBuilder.Entity<WeiXinArticleInfoLogModel>().ToTable("WeiXinArticleInfoLog").HasKey(u => u.ID);
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<WeiXinArticle> WeiXinArticle { get; set; }
-        public DbSet<WeiXinUserInfo> WeiXinUserInfo { get; set; }
-        public DbSet<WeiXinArticleInfo> WeiXinArticleInfo { get; set; }
+        public DbSet<WeiXinArticleModel> WeiXinArticle { get; set; }
+        public DbSet<WeiXinUserInfoModel> WeiXinUserInfo { get; set; }
+        public DbSet<WeiXinUserModel> WeiXinUser { get; set; }
+        public DbSet<WeiXinArticleInfoModel> WeiXinArticleInfo { get; set; }
+        public DbSet<WeiXinArticleInfoLogModel> WeiXinArticleInfoLog { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<ConfigModel> ConfigModel { get; set; }

@@ -13,15 +13,9 @@ using Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
-    public class RootController : Controller
+    public class RootController : BaseController
     {
-        private string appId;
-        private string appSecret;
-        private string token;
-        private string encodingAESKey;
-        SenparcWeixinSetting _senparcWeixinSetting;
-        private ILog log = LogManager.GetLogger(Startup.repository.Name, typeof(WeixinJSSDKController));
-        private readonly DynamicShowContext _context;
+        
         public RootController(DynamicShowContext context, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
             _context = context;
@@ -32,24 +26,32 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
 
         }
-        public async Task<IActionResult> Index(string openid)
+        public async Task<IActionResult> Index(int ID)
         {
-            var url = Server.GetAbsoluteUri(HttpContext.Request);
-            var jssdkUiPackage=JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
-            log.Info("openid" + openid);
-            var user = await _context.WeiXinUserInfo.FirstOrDefaultAsync(f => f.openid == openid);
-            if (user == null)
-                return Content("找不到用户");
-            var article = await _context.WeiXinArticle.FirstOrDefaultAsync(c => c.UserInfo == user);
-            if(article==null)
-                return Content("找不到用户文章");
-            var articleInfoList = await _context.WeiXinArticleInfo.Include(c => c.UID).Where(c => c.AID == article).OrderByDescending(c=>c.SpendingDate).ToListAsync();
-            ViewBag.AppId = jssdkUiPackage.AppId;
-            ViewBag.Timestamp = jssdkUiPackage.Timestamp;
-            ViewBag.NonceStr = jssdkUiPackage.NonceStr;
-            ViewBag.Signature = jssdkUiPackage.Signature;
-            ViewBag.url = url;
-            return View(articleInfoList);
+            if (uid == 0) return Content("Session 错误");
+            var user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
+            var artlist = await _context.WeiXinArticle.Include(p => p.articleInfoList).FirstOrDefaultAsync(w => w.ID == ID && w.userID == user);
+            if (artlist == null)
+            {
+                return Content("非法操作");
+            }
+            if (artlist.articleInfoList.Count <= 0)
+            {
+                return Content("无用户记录");
+            }
+            ViewBag.user = user;
+            ViewBag.artlist = artlist;
+            return View(artlist.articleInfoList);
+        
+            //var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == Convert.ToInt32(uid));
+            //if (user == null)
+            //    return Content("找不到用户");
+            //var article = await _context.WeiXinArticle.FirstOrDefaultAsync(c => c.userInfo == user);
+            //if (article == null)
+            //    return Content("找不到用户文章");
+            //var articleInfoList = await _context.WeiXinArticleInfo.Include(c => c.userInfoID).Include(c => c.articleInfoLogModel).Where(c => c.articleID == article.ID).OrderByDescending(c => c.spendingDate).ToListAsync();
+
+            //return View(articleInfoList);
         }
     }
 }

@@ -30,7 +30,6 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Data
                     context.Database.Migrate();
                     if (!context.Users.Any())
                     {
-
                         #region
                         context.Users.Add(
                             new User()
@@ -151,32 +150,80 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Data
                                 Time = Convert.ToDateTime("2018-3-26")
                             });
                         context.SaveChanges();
-                        for (int i = 0; i < 100; i++)
-                        {
-                            context.Users.Add(
-                            new User()
-                            {
-                                NickName = "User" + i.ToString("000"),
-                                address = "Address" + i.ToString("000"),
-                                State = 1,
-                                country = "中国",
-                                province = "华北",
-                                city = "北京",
-                                Image = "/Images/default.png",
-                                IP = "124.65.149.194",
-                                Content = "我在华山吃烤鸡" + i.ToString("000"),
-                                Email = i.ToString("000") + "@qq.com",
-                                Time = Convert.ToDateTime("2018-3-26")
-                            });
-                            context.SaveChanges();
-                        }
                         #endregion
+                    }
+                    if (!context.WeiXinUser.Any())
+                    {
+                        var user = new Models.WeiXinUserModel()
+                        {
+                            city = "东城",
+                            country = "中国",
+                            headimgurl = "http://thirdwx.qlogo.cn/mmopen/UGEBLia3UQ6SBrHOibVHQGVuJYE4mXH30EvpWlGBPGW3YGW0zxpJrAktLSyl5g9eNCnM49aY82aK6cd6DfNzLtkge8WAPsmu3s/132",
+                            nickname = "Anker_张",
+                            openid = "oCnkb1LaZxV1lcA0DwlvsCtHQs-c",
+                            province = "北京",
+                            sex = 1,
+                            time = DateTime.Now,
+                            unionid = ""
 
+                        };
+                        var userinfo = new List<Models.WeiXinUserInfoModel>() {
+                                new Models.WeiXinUserInfoModel(){
+                                    logTime=DateTime.Now,
+                                    remarks="初始化1"
+                                },
+                                 new Models.WeiXinUserInfoModel(){
+                                    logTime=DateTime.Now,
+                                    remarks="初始化2"
+                                }
+                            };
+                        user.userInfoList = userinfo;
+                        context.WeiXinUser.Add(user);
+                        context.SaveChanges();
+                        var article = new Models.WeiXinArticleModel()
+                        {
+                            author = "author",
+                            content = "content",
+                            Music = "Music",
+                            qrCode = "qrCode",
+                            state = 1,
+                            time = DateTime.Now,
+                            title = "title",
+                            titleImg = "titleImg",
+                            userID = user
+                        };
+                        
+                        var weiXinArticleList = new List<Models.WeiXinArticleInfoModel>()
+                            {
+                                new Models.WeiXinArticleInfoModel()
+                                {
+                                    amount=10,
+                                    endTime =DateTime.Now,
+                                    beginTime =DateTime.Now,
+                                    opentNumber=1,
+                                    spendingDate =20,
+                                    user =user
+                                }
+                            };
+                        
+                        
+                        article.articleInfoList = weiXinArticleList;
+                        context.WeiXinArticle.Add(article);
+                        var articleInfoLoglist = new Models.WeiXinArticleInfoLogModel()
+                        {
+                            amount = 10,
+                            beginTime = DateTime.Now,
+                            endTime = DateTime.Now,
+                            remarks = "初始化",
+                            articleInfoID = 1
+                        };
+                        context.WeiXinArticleInfoLog.Add(articleInfoLoglist);
+                        context.SaveChanges();
                     }
                 }
                 catch (Exception ex)
                 {
-                    if (retryForAvaiability < 10)
+                    if (retryForAvaiability < 20)
                     {
                         retryForAvaiability++;
                         var logger = loggerFactory.CreateLogger(typeof(UserContextSeed));

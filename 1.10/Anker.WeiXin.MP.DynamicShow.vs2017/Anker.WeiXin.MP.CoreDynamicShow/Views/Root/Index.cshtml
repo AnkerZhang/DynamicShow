@@ -1,4 +1,4 @@
-﻿@model List<Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfo>
+﻿@model List<Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfoModel>
 @{
     Layout = null;
 }
@@ -17,93 +17,20 @@
 
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="~/js/bootstrap.js"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script>
-        wx.config({
-            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: '@ViewBag.AppId', // 必填，公众号的唯一标识
-            timestamp: '@ViewBag.Timestamp', // 必填，生成签名的时间戳
-            nonceStr: '@ViewBag.NonceStr', // 必填，生成签名的随机串
-            signature: '@ViewBag.Signature',// 必填，签名
-            jsApiList: [
-                    'checkJsApi',
-                    'onMenuShareTimeline',
-                    'onMenuShareAppMessage',
-                    'onMenuShareQQ',
-                    'onMenuShareWeibo',
-                    'hideMenuItems',
-                    'showMenuItems',
-                    'hideAllNonBaseMenuItem',
-                    'showAllNonBaseMenuItem',
-                    'translateVoice',
-                    'startRecord',
-                    'stopRecord',
-                    'onRecordEnd',
-                    'playVoice',
-                    'pauseVoice',
-                    'stopVoice',
-                    'uploadVoice',
-                    'downloadVoice',
-                    'chooseImage',
-                    'previewImage',
-                    'uploadImage',
-                    'downloadImage',
-                    'getNetworkType',
-                    'openLocation',
-                    'getLocation',
-                    'hideOptionMenu',
-                    'showOptionMenu',
-                    'closeWindow',
-                    'scanQRCode',
-                    'chooseWXPay',
-                    'openProductSpecificView',
-                    'addCard',
-                    'chooseCard',
-                    'openCard'
-            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2。详见：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
-        });
-
-        wx.error(function (res) {
-            console.log(res);
-            alert('验证失败');
-        });
-
-         wx.ready(function () {
-                var link = "@ViewBag.url";
-                var imgUrl = 'http://www.nbug.xin/Images/ewm_01.png';
-                //转发到朋友圈
-                wx.onMenuShareTimeline({
-                    title: '张龙·Anker Zhang 最炫主页，后台',
-                    link: link,
-                    imgUrl: imgUrl,
-                    success: function () {
-                        alert('转发成功！');
-                    },
-                    cancel: function () {
-                        alert('转发失败！');
-                    }
-                });
-                //转发给朋友
-                wx.onMenuShareAppMessage({
-                    title: '张龙·Anker Zhang 最炫主页，后台',
-                    desc: '转发给朋友',
-                    link: link,
-                    imgUrl: imgUrl,
-                    type: 'link',
-                    dataUrl: '',
-                    success: function () {
-                        alert('转发成功！');
-                    },
-                    cancel: function () {
-                        alert('转发失败！');
-                    }
-                });
-            });
-    </script>
 </head>
 <body>
     <div class="jumbotron">
-        <h1>界面请求详情</h1>
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="@ViewBag.user.headimgurl" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">@ViewBag.user.nickname</h4>
+                <h4 class="media-heading">@ViewBag.artlis.titlet</h4>
+            </div>
+        </div>
         <div class="bs-example" data-example-id="striped-table">
             <table class="table table-striped">
                 <thead>
@@ -115,36 +42,36 @@
                         <th>浏览时长</th>
                         <th>BeginTime</th>
                         <th>EndTime</th>
-                        <th>关心度</th>
+                        <th>系数</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (int i = 0; i < Model.Count; i++)
                     {
-                        if (Model[i].UID.sex == 1)
+                        if (Model[i].user.sex == 1)
                         {
                             <tr class="alert alert-info">
                                 <th scope="row">@(i + 1)</th>
-                                <td><img style="width: 30px;height: 30px;" src="@Model[i].UID.headimgurl" /></td>
-                                <td>@Model[i].UID.nickname</td>
-                                <td>@Model[i].OpentNumber</td>
-                                <td>@(Model[i].Amount > 60 ? Model[i].Amount / 60 + "分钟" : Model[i].Amount + "秒") </td>
-                                <td>@Model[i].ClockStart.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                                <td>@Model[i].ClockEnd.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                                <td>@Model[i].SpendingDate</td>
+                                <td><img style="width: 30px;height: 30px;" src="@Model[i].user.headimgurl" /></td>
+                                <td>@Model[i].user.nickname</td>
+                                <td>@Model[i].opentNumber</td>
+                                <td>@(Model[i].amount > 60 ? Model[i].amount / 60 + "分钟" : Model[i].amount + "秒") </td>
+                                <td>@Model[i].beginTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].endTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].spendingDate</td>
                             </tr>
                         }
                         else
                         {
                             <tr class="alert alert-danger">
                                 <th scope="row">@(i + 1)</th>
-                                <td><img style="width: 30px;height: 30px;" src="@Model[i].UID.headimgurl" /></td>
-                                <td>@Model[i].UID.nickname</td>
-                                <td>@Model[i].OpentNumber</td>
-                                <td>@(Model[i].Amount > 60 ? Model[i].Amount / 60 + "分钟" : Model[i].Amount + "秒") </td>
-                                <td>@Model[i].ClockStart.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                                <td>@Model[i].ClockEnd.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                                <td>@Model[i].SpendingDate</td>
+                                <td><img style="width: 30px;height: 30px;" src="@Model[i].user.headimgurl" /></td>
+                                <td>@Model[i].user.nickname</td>
+                                <td>@Model[i].opentNumber</td>
+                                <td>@(Model[i].amount > 60 ? Model[i].amount / 60 + "分钟" : Model[i].amount + "秒") </td>
+                                <td>@Model[i].beginTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].endTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].spendingDate</td>
                             </tr>
                         }
 

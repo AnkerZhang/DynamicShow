@@ -106,51 +106,103 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticle", b =>
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfoLogModel", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Content");
+                    b.Property<int>("amount");
 
-                    b.Property<int?>("UserInfoID");
+                    b.Property<int>("articleInfoID");
+
+                    b.Property<DateTime>("beginTime");
+
+                    b.Property<DateTime>("endTime");
+
+                    b.Property<string>("remarks");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserInfoID");
-
-                    b.ToTable("WeiXinArticle");
+                    b.ToTable("WeiXinArticleInfoLog");
                 });
 
-            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfo", b =>
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfoModel", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AIDID");
+                    b.Property<int?>("WeiXinArticleModelID");
 
-                    b.Property<int>("Amount");
+                    b.Property<int>("amount");
 
-                    b.Property<DateTime>("ClockEnd");
+                    b.Property<DateTime>("beginTime");
 
-                    b.Property<DateTime>("ClockStart");
+                    b.Property<DateTime>("endTime");
 
-                    b.Property<int>("OpentNumber");
+                    b.Property<int>("opentNumber");
 
-                    b.Property<int>("SpendingDate");
+                    b.Property<int>("spendingDate");
 
-                    b.Property<int?>("UIDID");
+                    b.Property<int?>("userID");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AIDID");
+                    b.HasIndex("WeiXinArticleModelID");
 
-                    b.HasIndex("UIDID");
+                    b.HasIndex("userID");
 
                     b.ToTable("WeiXinArticleInfo");
                 });
 
-            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserInfo", b =>
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Music");
+
+                    b.Property<string>("author");
+
+                    b.Property<string>("content");
+
+                    b.Property<string>("qrCode");
+
+                    b.Property<int>("state");
+
+                    b.Property<DateTime>("time");
+
+                    b.Property<string>("title");
+
+                    b.Property<string>("titleImg");
+
+                    b.Property<int?>("userIDID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("userIDID");
+
+                    b.ToTable("WeiXinArticle");
+                });
+
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserInfoModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("WeiXinUserModelID");
+
+                    b.Property<DateTime>("logTime");
+
+                    b.Property<string>("remarks");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("WeiXinUserModelID");
+
+                    b.ToTable("WeiXinUserInfo");
+                });
+
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserModel", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
@@ -169,11 +221,13 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Migrations
 
                     b.Property<int>("sex");
 
+                    b.Property<DateTime>("time");
+
                     b.Property<string>("unionid");
 
                     b.HasKey("ID");
 
-                    b.ToTable("WeiXinUserInfo");
+                    b.ToTable("WeiXinUser");
                 });
 
             modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.CommonService.MyWebsite.HandlersServer.Models.Message", b =>
@@ -184,22 +238,29 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticle", b =>
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfoModel", b =>
                 {
-                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserInfo", "UserInfo")
+                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleModel")
+                        .WithMany("articleInfoList")
+                        .HasForeignKey("WeiXinArticleModelID");
+
+                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserModel", "user")
                         .WithMany()
-                        .HasForeignKey("UserInfoID");
+                        .HasForeignKey("userID");
                 });
 
-            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfo", b =>
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleModel", b =>
                 {
-                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticle", "AID")
+                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserModel", "userID")
                         .WithMany()
-                        .HasForeignKey("AIDID");
+                        .HasForeignKey("userIDID");
+                });
 
-                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserInfo", "UID")
-                        .WithMany()
-                        .HasForeignKey("UIDID");
+            modelBuilder.Entity("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserInfoModel", b =>
+                {
+                    b.HasOne("Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinUserModel")
+                        .WithMany("userInfoList")
+                        .HasForeignKey("WeiXinUserModelID");
                 });
 #pragma warning restore 612, 618
         }
