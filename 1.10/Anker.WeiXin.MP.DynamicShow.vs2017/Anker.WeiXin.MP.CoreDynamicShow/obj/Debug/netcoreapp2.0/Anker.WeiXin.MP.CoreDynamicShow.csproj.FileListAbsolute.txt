@@ -8,6 +8,8 @@ C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anke
 C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.pdb
 C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\obj\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.dll
 C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\obj\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.pdb
+C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\CommonService\MyWebsite\DBFile\ip2region.db
+C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\CommonService\MyWebsite\DBFile\ip2region.db
 C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.deps.json
 C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.runtimeconfig.json
 C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.runtimeconfig.dev.json
@@ -19,4 +21,3 @@ C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\
 C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\obj\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.dll
 C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\obj\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.pdb
 C:\Users\Anker\Desktop\show\DynamicShow\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\obj\Debug\netcoreapp2.0\Anker.WeiXin.MP.CoreDynamicShow.csprojResolveAssemblyReference.cache
-C:\Users\Administrator\Desktop\Show\1.10\Anker.WeiXin.MP.DynamicShow.vs2017\Anker.WeiXin.MP.CoreDynamicShow\bin\Debug\netcoreapp2.0\CommonService\MyWebsite\DBFile\ip2region.db

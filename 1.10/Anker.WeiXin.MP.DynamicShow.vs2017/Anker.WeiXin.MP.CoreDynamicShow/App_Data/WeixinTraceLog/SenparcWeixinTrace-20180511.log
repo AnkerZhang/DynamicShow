@@ -1,0 +1,64 @@
+
+[[[接口调用]]]
+[2018/5/11 21:03:37]
+[线程：5]
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    Result：
+{"errcode":40164,"errmsg":"invalid ip 115.34.252.174, not in whitelist hint: [L_zLGA08182790]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/11 21:03:38]
+[线程：5]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    errcode：40164
+    errmsg：invalid ip 115.34.252.174, not in whitelist hint: [L_zLGA08182790]
+
+[[[接口调用]]]
+[2018/5/11 21:07:36]
+[线程：5]
+    URL：https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b&code=&grant_type=authorization_code
+    Result：
+{"errcode":41008,"errmsg":"missing code, hints: [ req_id: X3z0TA0057th31 ]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/11 21:07:36]
+[线程：5]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b&code=&grant_type=authorization_code
+    errcode：缺少oauth_code
+    errmsg：missing code, hints: [ req_id: X3z0TA0057th31 ]
+
+[[[接口调用]]]
+[2018/5/11 21:08:10]
+[线程：5]
+    URL：https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b&code=&grant_type=authorization_code
+    Result：
+{"errcode":41008,"errmsg":"missing code, hints: [ req_id: SGNK7a0091th19 ]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/11 21:08:10]
+[线程：5]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b&code=&grant_type=authorization_code
+    errcode：缺少oauth_code
+    errmsg：missing code, hints: [ req_id: SGNK7a0091th19 ]
+
+[[[接口调用]]]
+[2018/5/11 21:24:08]
+[线程：6]
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    Result：
+{"errcode":40164,"errmsg":"invalid ip 115.34.252.174, not in whitelist hint: [ifLb7a00483064]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/11 21:24:08]
+[线程：6]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    errcode：40164
+    errmsg：invalid ip 115.34.252.174, not in whitelist hint: [ifLb7a00483064]

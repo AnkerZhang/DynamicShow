@@ -26,12 +26,14 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             token = _senparcWeixinSetting.Token;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             HttpContext = accessor.HttpContext;
+            uid =   Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
-        public async Task<IActionResult> Index(int ID)
+        public async Task<IActionResult> Index(int aid)
         {
+            
             if (uid == 0) return Content("Session 错误");
             var user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
-            var artlist = await _context.WeiXinArticle.Include(p => p.articleInfoList).FirstOrDefaultAsync(w => w.ID == ID && w.userID == user);
+            var artlist = await _context.WeiXinArticle.Include(p => p.articleInfoList).Include(p => p.userID).FirstOrDefaultAsync(w => w.ID == aid && w.userID == user);
             if (artlist == null)
             {
                 return Content("非法操作");
@@ -42,7 +44,9 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
             ViewBag.user = user;
             ViewBag.artlist = artlist;
-            return View(artlist.articleInfoList);
+            var articleInfoList = await _context.WeiXinArticleInfo.Include(i=>i.user).Where(p => artlist.articleInfoList.Select(s => s.ID).Contains(p.ID)).ToListAsync();
+
+            return View(articleInfoList);
         
             //var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == Convert.ToInt32(uid));
             //if (user == null)

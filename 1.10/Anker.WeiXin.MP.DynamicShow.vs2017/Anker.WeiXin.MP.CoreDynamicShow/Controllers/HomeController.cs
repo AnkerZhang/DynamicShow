@@ -45,6 +45,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             appSecret = _senparcWeixinSetting.WeixinAppSecret;
             token = _senparcWeixinSetting.Token;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
+            
         }
         public ActionResult OAuth()
         {

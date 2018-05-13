@@ -27,12 +27,11 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         public ActionResult OAuth(string art)
         {
             return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-              "http://www.nbug.xin/Show/Index?art="+ art + "".UrlEncode(),
+              "http://www.nbug.xin/Show/Index?returnUrl=" + "".UrlEncode(),
               "", OAuthScope.snsapi_userinfo));
         }
         public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
         {
-            
             _host = host;
             _context = context;
             _senparcWeixinSetting = senparcWeixinSetting.Value;
@@ -41,72 +40,38 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             token = _senparcWeixinSetting.Token;
             HttpContext = accessor.HttpContext;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
+            
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-            uid =  Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
         public async Task<IActionResult> Index(string art,string code, string state)
         {
-            WeiXinUserModel user = null;
-            if (string.IsNullOrEmpty(code))
+            if (art != null && art != "")
             {
-                if (uid == 0)
+                HttpContext.Session.SetString("art", art);
+            }
+            else {
+                art= HttpContext.Session.GetString("art");
+            }
+            log.Info("/Show/Index/++++++++++++++" + uid);
+            WeiXinUserModel user = null;
+            if (uid == 0)
+            {
+                if (string.IsNullOrEmpty(code))
                 {
                     return Redirect("/Show/OAuth");
+                    
                 }
-
-            }
-            else
-            {
-                OAuthAccessTokenResult result = null;
-                try
+                else
                 {
-                    result = OAuthApi.GetAccessToken(appId, appSecret, code);
-                }
-                catch (Exception ex)
-                {
-                    return Content(ex.Message);
-                }
-                if (result.errcode != ReturnCode.请求成功)
-                {
-                    return Content("错误：" + result.errmsg);
-                }
-                try
-                {
-                     user = await _context.WeiXinUser.FirstOrDefaultAsync(m => m.openid == result.openid);
-                    if (user == null)
-                    { 
-                        OAuthUserInfo userInfo = OAuthApi.GetUserInfo(result.access_token, result.openid);
-                        user = new WeiXinUserModel()
-                        {
-                            city = userInfo.city,
-                            headimgurl = userInfo.headimgurl,
-                            country = userInfo.country,
-                            nickname = userInfo.nickname,
-                            openid = userInfo.openid,
-                            province = userInfo.province,
-                            sex = userInfo.sex,
-                            time = DateTime.Now,
-                            userInfoList = new List<WeiXinUserInfoModel>() { new WeiXinUserInfoModel() {
-                                logTime=DateTime.Now,
-                                remarks="请求/Home/Index"
-                            } },
-                            unionid = userInfo.unionid == null ? "" : userInfo.unionid
-                        };
-                        await _context.WeiXinUser.AddAsync(user);
-                        await _context.SaveChangesAsync();
-                        user = await _context.WeiXinUser.FirstOrDefaultAsync(p => p.openid == user.openid);
-                    }
-
-
-                }
-                catch (ErrorJsonResultException ex)
-                {
-                    return Content(ex.Message);
+                    adduser(code, _context);
+                    uid = Convert.ToInt32(HttpContext.Session.GetString("uid"));
+                    
                 }
             }
-            if(user==null)
+            user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
+            if (user==null)
                 return Redirect("/Show/OAuth?art="+ art);
-            HttpContext.Session.SetString("uid", user.ID.ToString());
             var url = Server.GetAbsoluteUri(HttpContext.Request);
             var article= await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
             if (article == null) return Content("错误");
@@ -116,46 +81,61 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ViewBag.url = url;
             return View(article);
         }
-       public async Task ArticleApi(string type,string art)
+       public async Task ArticleApi(string type)
         {
-            var article = await _context.WeiXinArticle.Include(c=>c.articleInfoList).FirstOrDefaultAsync(f => f.qrCode == art);
-            var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
-            var weiXinArticle = article.articleInfoList.Where(w => w.user.ID == uid).FirstOrDefault();
-            if (weiXinArticle == null)
+           string art = HttpContext.Session.GetString("art");
+            log.Info("/Show/ArticleApi/++++++++++++++" + uid);
+            try
             {
-                 weiXinArticle = new Models.WeiXinArticleInfoModel()
+                var article = await _context.WeiXinArticle.Include(c => c.articleInfoList).Include(c => c.userID).FirstOrDefaultAsync(f => f.qrCode == art);
+                var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
+                var weiXinArticle = article.articleInfoList.Where(w => w.user.ID == uid).FirstOrDefault();
+                if (type == "s" && weiXinArticle == null)
+                    return;
+                if (weiXinArticle == null)
                 {
-                    user = user,
-                    beginTime = DateTime.Now,
-                    amount = 1,
-                    opentNumber = 1,
-                    endTime = DateTime.Now,
-                    spendingDate = 10 + 1
-                };
-                article.articleInfoList.Add(weiXinArticle);
-                _context.WeiXinArticle.Update(article);
-            }
-            else
-            {
-                switch (type)
-                {
-                    case "open":
-                        weiXinArticle.opentNumber = weiXinArticle.opentNumber + 1;
-                        weiXinArticle.endTime = DateTime.Now;
-                        weiXinArticle.spendingDate = weiXinArticle.spendingDate + 10;
-                        break;
-                    case "s":
-                        weiXinArticle.amount = weiXinArticle.amount + 3;
-                        weiXinArticle.endTime = DateTime.Now;
-                        weiXinArticle.spendingDate = weiXinArticle.spendingDate + 3;
-                        break;
-                    default:
-
-                        break;
+                    weiXinArticle = new Models.WeiXinArticleInfoModel()
+                    {
+                        user = user,
+                        beginTime = DateTime.Now,
+                        amount = 1,
+                        opentNumber = 1,
+                        endTime = DateTime.Now,
+                        spendingDate = 10 + 1
+                    };
+                    article.articleInfoList.Add(weiXinArticle);
+                    _context.WeiXinArticle.Update(article);
+                    _context.SaveChanges();
                 }
-                _context.Update(weiXinArticle);
+                else
+                {
+                    switch (type)
+                    {
+                        case "open":
+                            weiXinArticle.opentNumber = weiXinArticle.opentNumber + 1;
+                            weiXinArticle.endTime = DateTime.Now;
+                            weiXinArticle.spendingDate = weiXinArticle.spendingDate + 10;
+                            break;
+                        case "s":
+                            weiXinArticle.amount = weiXinArticle.amount + 3;
+                            weiXinArticle.endTime = DateTime.Now;
+                            weiXinArticle.spendingDate = weiXinArticle.spendingDate + 3;
+                            break;
+                        default:
+
+                            break;
+                    }
+                    _context.Update(weiXinArticle);
+                    _context.SaveChanges();
+                }
             }
-            _context.SaveChanges();
+            catch (Exception ex)
+            {
+                log.Info("/Show/ArticleApi/++++++++++++++" + ex.Message.ToString());
+                return;
+            }
+            
+            
         }
     }
 }

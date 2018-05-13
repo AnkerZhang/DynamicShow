@@ -66,37 +66,23 @@
             alert('验证失败');
         });
 
-         wx.ready(function () {
-                var link = "@ViewBag.url";
-                var imgUrl = '@Model.titleImg';
-                //转发到朋友圈
-                wx.onMenuShareTimeline({
-                    title: @Model.title'',
-                    link: link,
-                    imgUrl: imgUrl,
-                    success: function () {
-                        alert('转发成功！');
-                    },
-                    cancel: function () {
-                        alert('转发失败！');
-                    }
-                });
-                //转发给朋友
-                wx.onMenuShareAppMessage({
-                    title: '@Model.title',
-                    desc: '转发给朋友',
-                    link: link,
-                    imgUrl: imgUrl,
-                    type: 'link',
-                    dataUrl: '',
-                    success: function () {
-                        alert('转发成功！');
-                    },
-                    cancel: function () {
-                        alert('转发失败！');
-                    }
-                });
+        wx.ready(function () {
+            var shareData = {
+                "imgUrl": '@Model.titleImg',    // 分享显示的缩略图地址  
+                "link": '@ViewBag.url',    // 分享地址  
+                "desc": '@Model.title',   // 分享描述  
+                "title": '@Model.title',   // 分享标题  
+                success: function () {
+
+                    // 分享成功可以做相应的数据处理  
+
+                    alert("分享成功");  
+                }
             });
+        wx.onMenuShareTimeline(shareData);
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareQQ(shareData);
+        wx.onMenuShareWeibo(shareData);
     </script>
 </head>
 <body>
@@ -115,7 +101,7 @@
                         </div>
                     </div>
                 </span>
-                <em id="publish_time" class="rich_media_meta rich_media_meta_text">2018-04-29</em>
+                <em id="publish_time" class="rich_media_meta rich_media_meta_text">@Model.time.ToString("yyyy/MM/dd ")</em>
                 <p class="rich_media_meta_primary rich_media_meta_text">作者&nbsp;@Model.author</p>
             </div>
             <div class="rich_media_content " id="js_content">
@@ -123,36 +109,37 @@
             </div>
         </div>
     </div>
+    <embed src="@Model.Music" autostart="true" loop="true" hidden="true"></embed>
     <script>
-         $(function () {
-             function getParam(paramName) {
-                 paramValue = "", isFound = !1;
-                 if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
-                     arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
-                     while (i < arrSource.length && !isFound) arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
-                 }
-                 return paramValue == "" && (paramValue = null), paramValue
-             } 
-             $.ajax({
-                 url: "/Home/ArticleApi?type=open&art" + getParam("art"),
-                 type: "GET",
-                 success: function () {
+        $(function () {
 
-                 }
-             })
+            $.ajax({
+                url: "/Show/ArticleApi?type=open",
+                type: "GET",
+                success: function () {
 
-             timedCount();
-         });
-         function timedCount() {
-             $.ajax({
-                 url: "/Home/ArticleApi?type=s",
-                 type: "GET",
-                 success: function () {
+                }
+            })
+            timedCount();
+        });
+        function timedCount() {
+            $.ajax({
+                url: "/Show/ArticleApi?type=s",
+                type: "GET",
+                success: function () {
 
-                 }
-             })
-             var t = setTimeout("timedCount()", 3000)
-         }
+                }
+            })
+            var t = setTimeout("timedCount()", 3000)
+        }
+        function getParam(paramName) {
+            paramValue = "", isFound = !1;
+            if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+                arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
+                while (i < arrSource.length && !isFound) arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
+            }
+            return paramValue == "" && (paramValue = null), paramValue
+        }
     </script>
 
 

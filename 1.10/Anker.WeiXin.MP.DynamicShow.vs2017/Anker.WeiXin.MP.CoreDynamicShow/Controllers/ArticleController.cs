@@ -37,7 +37,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             HttpContext = accessor.HttpContext;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
 
-            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid =   Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+
         }
         public ActionResult OAuth()
         {
@@ -47,6 +48,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public async Task<IActionResult> MyArticle(string code, string state)
         {
+           
+            log.Info("/Article/MyArticle/++++++++++++++" + uid);
             WeiXinUserModel user = null;
             if (string.IsNullOrEmpty(code))
             {
@@ -54,54 +57,15 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 {
                     return Redirect("/Article/OAuth");
                 }
-
-            }
-            OAuthAccessTokenResult result = null;
-            try
-            {
-                result = OAuthApi.GetAccessToken(appId, appSecret, code);
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
-            if (result.errcode != ReturnCode.请求成功)
-            {
-                return Content("错误：" + result.errmsg);
-            }
-            try
-            {
-                user = await _context.WeiXinUser.FirstOrDefaultAsync(m => m.openid == result.openid);
-                if (user == null)
-                {
-                    OAuthUserInfo userInfo = OAuthApi.GetUserInfo(result.access_token, result.openid);
-                    user = new WeiXinUserModel()
-                    {
-                        city = userInfo.city,
-                        headimgurl = userInfo.headimgurl,
-                        country = userInfo.country,
-                        nickname = userInfo.nickname,
-                        openid = userInfo.openid,
-                        province = userInfo.province,
-                        sex = userInfo.sex,
-                        time = DateTime.Now,
-                        userInfoList = new List<WeiXinUserInfoModel>() { new WeiXinUserInfoModel() {
-                                logTime=DateTime.Now,
-                                remarks="请求/Article/OAuth"
-                            } },
-                        unionid = userInfo.unionid == null ? "" : userInfo.unionid
-                    };
-                    await _context.WeiXinUser.AddAsync(user);
-                    await _context.SaveChangesAsync();
-                    user = await _context.WeiXinUser.FirstOrDefaultAsync(p => p.openid == user.openid);
+                else {
+                    user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
                 }
             }
-            catch (ErrorJsonResultException ex)
-            {
-                return Content(ex.Message);
+            else {
+                adduser(code,_context);
+                uid=Convert.ToInt32(HttpContext.Session.GetString("uid"));
+                user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             }
-            HttpContext.Session.SetString("uid", user.ID.ToString());
-            user =await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             var artlist=await _context.WeiXinArticle.Where(w => w.userID==user).ToListAsync();
             ViewBag.user = user;
             return View(artlist);
@@ -118,6 +82,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            
             if (uid == 0) return Content("Session 错误");
             var user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             ViewBag.user = user;
@@ -194,7 +159,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 //文件后缀
                 var fileExtension = Path.GetExtension(uploadfile.FileName);
                 // 判断后缀是否是图片
-                const string fileFilt = ".gif|.jpg|.php|.jsp|.jpeg|.png|......";
+                const string fileFilt = ".gif|.jpg|.php|.jsp|.jpeg|.png|.heic|.|";
                 if (fileExtension == null)
                 {
                     return null;
@@ -232,5 +197,6 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 return strResult.Replace("-", "");
             }
         }
+
     }
 }

@@ -27,7 +27,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
     public class MenuController : BaseController
     {
        
-        public MenuController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+        public MenuController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting,IHttpContextAccessor accessor)
         {
             _host = host;
             _context = context;
@@ -37,6 +37,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             token = _senparcWeixinSetting.Token;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(MenuController));
+            HttpContext = accessor.HttpContext;
             uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
         public IActionResult CreateMenu()
@@ -57,12 +58,12 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             bg.button.Add(subButton3);
             subButton3.sub_button.Add(new SingleViewButton()
             {
-                url = "http://www.nbug.xin/5000",
+                url = "http://www.nbug.xin:5000",
                 name = "Anker主页"
             });
             subButton3.sub_button.Add(new SingleViewButton()
             {
-                url = "http://www.nbug.xin/5000/Home/Board",
+                url = "http://www.nbug.xin:5000/Home/Board",
                 name = "反馈信息"
             });
 
@@ -84,7 +85,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
             catch (Exception ex)
             {
-                var json = new { Success = false, Message = ex.Message };
+                var json = new { Success = false,  ex.Message };
                 return Json(json, new JsonSerializerSettings() { ContractResolver = new DefaultContractResolver() });
             }
 
