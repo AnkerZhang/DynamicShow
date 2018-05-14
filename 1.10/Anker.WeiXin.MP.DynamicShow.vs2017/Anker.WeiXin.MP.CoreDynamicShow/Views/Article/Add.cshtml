@@ -42,7 +42,7 @@
             <div class="form-group">
                 <label >分享链接小图</label>
                 <img id="xiaoimg" alt="评论者头像" src="/Images/default.png" class="btn btn-default" style="display: inline-block;width:50px;">
-                <input type="file" id="xiaofile" accept="image/gif, image/jpeg, image/png, image/jpg">
+                <input type="file" id="xiaofile" accept="image/gif, image/jpeg,image/heic, image/png, image/jpg">
             </div>
             <div class="dropdown form-group">
                 <label >请选择背景音乐</label>
@@ -53,6 +53,10 @@
                     <option>七月上</option>
                     <option>白羊</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label>加粗主要内容概括</label>
+                <input type="text" class="form-control" id="contentTitle" placeholder="加粗主要内容概括">
             </div>
             <div id="comment">
                 
@@ -73,7 +77,7 @@
             htmladd += '<input type="text" class="form-control text' + index + '"  placeholder="内容文字">';
             htmladd += '   <label >插图</label>';
             htmladd += ' <img  alt="评论者头像" src="/Images/default.png" class="btn btn-default tu' + index + 'img" style="display: inline-block;width:50px;">';
-            htmladd += '  <input accept="image/gif, image/jpeg, image/png, image/jpg" type="file"id=tu' + index + 'file class="tu' + index + 'file">';
+            htmladd += '  <input accept="image/gif, image/jpeg, image/png,image/heic, image/jpg" type="file"id=tu' + index + 'file class="tu' + index + 'file">';
             htmladd += ' </div>';
             $("#comment").append(htmladd);
             $(".tu" + index+"file").change(function (e) {
@@ -104,10 +108,12 @@
             var zuozhe = $("#zuozhe").val().trim();
             var xiaofile = document.getElementById("xiaofile").files[0];
             var music = $("#music").val().trim();
+            var contentTitle = $("#contentTitle").val().trim();
             formData.append("title", title);
             formData.append("zuozhe", zuozhe);
             formData.append("xiaofile", xiaofile);
             formData.append("music", music);
+            formData.append("contentTitle", contentTitle);
             var comment = $(".comment");
             var strlist = "";
             var filelist = new Array();

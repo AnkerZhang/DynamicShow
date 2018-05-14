@@ -11,6 +11,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Models
         public string title { get; set; }
         public string zuozhe { get; set; }
         public string music { get; set; }
+        public string contentTitle { get; set; }
         public IFormFile xiaofile { get; set; }
         public List<string> strlist { get; set; }
         public IFormFile tu1file { get; set; }

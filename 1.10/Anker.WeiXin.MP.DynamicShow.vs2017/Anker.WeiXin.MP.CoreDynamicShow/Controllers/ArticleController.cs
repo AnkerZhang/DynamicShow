@@ -20,6 +20,7 @@ using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 using Senparc.Weixin;
 using Senparc.Weixin.Exceptions;
+using System.DrawingCore;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
@@ -48,7 +49,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         }
         public async Task<IActionResult> MyArticle(string code, string state)
         {
-           
+
             log.Info("/Article/MyArticle/++++++++++++++" + uid);
             WeiXinUserModel user = null;
             if (string.IsNullOrEmpty(code))
@@ -57,23 +58,25 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 {
                     return Redirect("/Article/OAuth");
                 }
-                else {
+                else
+                {
                     user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
                 }
             }
-            else {
-                adduser(code,_context);
-                uid=Convert.ToInt32(HttpContext.Session.GetString("uid"));
+            else
+            {
+                adduser(code, _context);
+                uid = Convert.ToInt32(HttpContext.Session.GetString("uid"));
                 user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             }
-            var artlist=await _context.WeiXinArticle.Where(w => w.userID==user).ToListAsync();
+            var artlist = await _context.WeiXinArticle.Where(w => w.userID == user).ToListAsync();
             ViewBag.user = user;
             return View(artlist);
         }
         public async Task<IActionResult> updata(int aid)
         {
             if (uid == 0) return Content("Session 错误");
-            var art = await _context.WeiXinArticle.Include(i => i.userID).FirstOrDefaultAsync(f => (f.ID == aid&&f.userID.ID==uid));
+            var art = await _context.WeiXinArticle.Include(i => i.userID).FirstOrDefaultAsync(f => (f.ID == aid && f.userID.ID == uid));
 
             var user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             ViewBag.user = user;
@@ -82,7 +85,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            
+
             if (uid == 0) return Content("Session 错误");
             var user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             ViewBag.user = user;
@@ -92,14 +95,14 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         public async Task<IActionResult> AddData(FromDataModel fromData)
         {
             var commentInfo = InsertPicture(fromData);
-            var user =await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
+            var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
             if (user == null) return Content("Session 错误");
             StringBuilder sb = new StringBuilder();
             foreach (var item in commentInfo)
             {
                 if (item.str == "titleImg") continue;
-                sb.AppendFormat("<p> <img src='{0}' /></p>",item.fileName);
-                sb.AppendFormat("<p style='letter - spacing: 1px; padding - left: 0.5em; padding - right: 0.5em; '><span style='font - size: 15px; '>{0}</span></p>",item.str);
+                sb.AppendFormat("<p style='padding - left: 0.5em; padding - right: 0.5em; letter - spacing: 1px; line - height: 1.75em; '><span style='font - size: 13px; '>{0}</span></p>", item.str);
+                sb.AppendFormat("<p> <img src='{0}' /></p>", item.fileName);
             }
             var date = DateTime.Now;
             var art = new WeiXinArticleModel()
@@ -112,6 +115,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 title = fromData.title,
                 titleImg = commentInfo[0].fileName,
                 userID = user,
+                contentTitle=fromData.contentTitle,
                 content = sb.ToString()
             };
             await _context.WeiXinArticle.AddAsync(art);
@@ -122,7 +126,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         {
             var str = fromData.strlist[0].Split('^');
             List<CommentInfo> list = new List<CommentInfo>();
-            list.Add(new CommentInfo() { str = "titleImg", fileName = saveImg(fromData.xiaofile) });
+            list.Add(new CommentInfo() { str = "titleImg", fileName = saveImg(fromData.xiaofile,false) });
             if (fromData.tu1file != null)
                 list.Add(new CommentInfo() { str = str[0], fileName = saveImg(fromData.tu1file) });
             if (fromData.tu2file != null)
@@ -146,7 +150,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             return list;
         }
 
-        private string saveImg(IFormFile uploadfile)
+        private string saveImg(IFormFile uploadfile,bool b=true)
         {
             var path = _host.WebRootPath;
             var filePath = string.Format("/Uploads/Images/");
@@ -176,12 +180,20 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 //}
                 var strDateTime = DateTime.Now.ToString("yyMMddhhmmssfff"); //取得时间字符串
                 var strRan = Convert.ToString(new Random().Next(100, 999)); //生成三位随机数
-                var saveName = strDateTime + strRan + fileExtension;
+                var saveName = strDateTime + strRan + fileExtension.Split('.')[0]+".jpg";
                 //插入图片数据
                 using (FileStream fs = System.IO.File.Create(path + filePath + saveName))
                 {
                     uploadfile.CopyTo(fs);
                     fs.Flush();
+                }
+                if (b)
+                {
+                    update_picture(path + filePath, saveName, path + filePath + saveName);
+                }
+                else
+                {
+                    update_picture(path + filePath, saveName, path + filePath + saveName,100,100);
                 }
                 return filePath + saveName;
             }
@@ -197,6 +209,77 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 return strResult.Replace("-", "");
             }
         }
+        /// <summary>  
+        /// 修改指定图片的分辨率  
+        /// </summary>  
+        /// <param name="fileFoldUrl">文件夹url</param>  
+        /// <param name="fileName">文件名</param>  
+        /// <param name="filePath">文件路径，带文件名</param>  
+        /// <param name="_width">分辨率的宽</param>  
+        /// <param name="_height">分辨率的高</param>  
+        public void update_picture(string fileFoldUrl, string fileName, string filePath, int _width = 480, int _height = 640)
+        {
+            byte[] zp = this.load_pictMemory(filePath);
 
+            MemoryStream ms = new MemoryStream(zp);
+
+            Image img = Image.FromStream(ms);
+
+            if (img.Width > _width || img.Height > _height)
+            {
+                if (img.Width >= img.Height)
+                {
+                    _height = (int)Math.Floor(Convert.ToDouble(img.Height) * (Convert.ToDouble(_width) / Convert.ToDouble(img.Width)));
+                }
+                else
+                {
+                    _width = (int)Math.Floor(Convert.ToDouble(img.Width) * (Convert.ToDouble(_height) / Convert.ToDouble(img.Height)));
+                }
+            }
+            else
+            {
+                _width = img.Width; //原图宽度
+                _height = img.Height; //原图高度
+            }
+
+            Bitmap btp = new Bitmap(img, _width, _height);
+
+            DirectoryInfo dti = new DirectoryInfo(fileFoldUrl);
+
+            FileInfo[] fis = dti.GetFiles();
+
+            string fileUrl = fileFoldUrl + fileName;
+
+            btp.Save(fileUrl);
+        }
+        /// <summary>  
+        /// 获取指定文件流的字节大小  
+        /// </summary>  
+        /// <param name="filePath">文件路径</param>  
+        /// <returns>byte[]</returns>  
+        public byte[] load_pictMemory(string filePath)
+        {
+            byte[] pictData = null;
+
+            FileInfo fi = new FileInfo(filePath);
+
+            if (fi.Exists)
+            {
+                pictData = new byte[fi.Length];
+
+                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite);
+
+                BinaryReader br = new BinaryReader(fs);
+
+                br.Read(pictData, 0, Convert.ToInt32(fi.Length));
+
+                fs.Dispose();
+            }
+            else
+            {
+                return null;
+            }
+            return pictData;
+        }
     }
 }

@@ -165,6 +165,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Migrations
 
                     b.Property<string>("content");
 
+                    b.Property<string>("contentTitle");
+
                     b.Property<string>("qrCode");
 
                     b.Property<int>("state");

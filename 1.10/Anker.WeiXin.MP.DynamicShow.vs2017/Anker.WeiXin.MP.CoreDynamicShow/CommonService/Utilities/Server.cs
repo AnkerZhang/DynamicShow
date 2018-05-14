@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.DrawingCore;
 using System.IO;
 using System.Text;
 
@@ -103,6 +104,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities
                 .Append(request.QueryString)
                 .ToString();
         }
+
+       
 
     }
 }

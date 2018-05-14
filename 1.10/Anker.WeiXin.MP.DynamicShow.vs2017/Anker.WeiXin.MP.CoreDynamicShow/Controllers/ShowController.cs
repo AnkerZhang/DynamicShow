@@ -40,18 +40,18 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             token = _senparcWeixinSetting.Token;
             HttpContext = accessor.HttpContext;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
-            
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid =  Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
-        public async Task<IActionResult> Index(string art,string code, string state)
+        public async Task<IActionResult> Index(string art, string code, string state)
         {
             if (art != null && art != "")
             {
                 HttpContext.Session.SetString("art", art);
             }
-            else {
-                art= HttpContext.Session.GetString("art");
+            else
+            {
+                art = HttpContext.Session.GetString("art");
             }
             log.Info("/Show/Index/++++++++++++++" + uid);
             WeiXinUserModel user = null;
@@ -60,20 +60,20 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 if (string.IsNullOrEmpty(code))
                 {
                     return Redirect("/Show/OAuth");
-                    
+
                 }
                 else
                 {
                     adduser(code, _context);
                     uid = Convert.ToInt32(HttpContext.Session.GetString("uid"));
-                    
+
                 }
             }
             user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
-            if (user==null)
-                return Redirect("/Show/OAuth?art="+ art);
+            if (user == null)
+                return Redirect("/Show/OAuth?art=" + art);
             var url = Server.GetAbsoluteUri(HttpContext.Request);
-            var article= await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
+            var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
             if (article == null) return Content("错误");
             ViewBag.user = user;
             var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
@@ -81,61 +81,58 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ViewBag.url = url;
             return View(article);
         }
-       public async Task ArticleApi(string type)
+        public async Task ArticleApi(string type)
         {
-           string art = HttpContext.Session.GetString("art");
+            string art = HttpContext.Session.GetString("art");
             log.Info("/Show/ArticleApi/++++++++++++++" + uid);
-            try
-            {
-                var article = await _context.WeiXinArticle.Include(c => c.articleInfoList).Include(c => c.userID).FirstOrDefaultAsync(f => f.qrCode == art);
-                var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
-                var weiXinArticle = article.articleInfoList.Where(w => w.user.ID == uid).FirstOrDefault();
-                if (type == "s" && weiXinArticle == null)
-                    return;
-                if (weiXinArticle == null)
-                {
-                    weiXinArticle = new Models.WeiXinArticleInfoModel()
-                    {
-                        user = user,
-                        beginTime = DateTime.Now,
-                        amount = 1,
-                        opentNumber = 1,
-                        endTime = DateTime.Now,
-                        spendingDate = 10 + 1
-                    };
-                    article.articleInfoList.Add(weiXinArticle);
-                    _context.WeiXinArticle.Update(article);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    switch (type)
-                    {
-                        case "open":
-                            weiXinArticle.opentNumber = weiXinArticle.opentNumber + 1;
-                            weiXinArticle.endTime = DateTime.Now;
-                            weiXinArticle.spendingDate = weiXinArticle.spendingDate + 10;
-                            break;
-                        case "s":
-                            weiXinArticle.amount = weiXinArticle.amount + 3;
-                            weiXinArticle.endTime = DateTime.Now;
-                            weiXinArticle.spendingDate = weiXinArticle.spendingDate + 3;
-                            break;
-                        default:
-
-                            break;
-                    }
-                    _context.Update(weiXinArticle);
-                    _context.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Info("/Show/ArticleApi/++++++++++++++" + ex.Message.ToString());
+            //查到文章 及详情
+            var article = await _context.WeiXinArticle.Include(c => c.articleInfoList).FirstOrDefaultAsync(f => f.qrCode == art);
+            ///用户
+            var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
+            var weiXinArticle = await _context.WeiXinArticleInfo.Include(i => i.user).Where(p => article.articleInfoList.Select(s => s.ID).Contains(p.ID)).ToListAsync();
+            var articleInfo = weiXinArticle.FirstOrDefault(w => w.user.ID == uid);
+            if (type == "s" && articleInfo == null)
                 return;
+            if (articleInfo == null)
+            {
+                articleInfo = new WeiXinArticleInfoModel()
+                {
+                    user = user,
+                    beginTime = DateTime.Now,
+                    amount = 1,
+                    opentNumber = 1,
+                    endTime = DateTime.Now,
+                    spendingDate = 10 + 1
+                };
+                article.articleInfoList.Add(articleInfo);
+                _context.WeiXinArticle.Update(article);
+                _context.SaveChanges();
             }
-            
-            
+            else
+            {
+                switch (type)
+                {
+                    case "open":
+                        articleInfo.opentNumber = articleInfo.opentNumber + 1;
+                        articleInfo.endTime = DateTime.Now;
+                        articleInfo.spendingDate = articleInfo.spendingDate + 10;
+                        break;
+                    case "s":
+                        articleInfo.amount = articleInfo.amount + 3;
+                        articleInfo.endTime = DateTime.Now;
+                        articleInfo.spendingDate = articleInfo.spendingDate + 3;
+                        break;
+                    default:
+
+                        break;
+                }
+                _context.Update(articleInfo);
+                _context.SaveChanges();
+            }
+
+
+
         }
+
     }
 }

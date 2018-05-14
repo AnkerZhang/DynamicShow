@@ -3,6 +3,7 @@
     Layout = null;
 }
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,23 +68,40 @@
         });
 
         wx.ready(function () {
-            var shareData = {
-                "imgUrl": '@Model.titleImg',    // 分享显示的缩略图地址  
-                "link": '@ViewBag.url',    // 分享地址  
-                "desc": '@Model.title',   // 分享描述  
-                "title": '@Model.title',   // 分享标题  
-                success: function () {
+            var url = 'http://www.nbug.xin';
+            var link = '@ViewBag.url';
+                var imgUrl = url + '@Model.titleImg';
 
-                    // 分享成功可以做相应的数据处理  
-
-                    alert("分享成功");  
-                }
-            });
-        wx.onMenuShareTimeline(shareData);
-        wx.onMenuShareAppMessage(shareData);
-        wx.onMenuShareQQ(shareData);
-        wx.onMenuShareWeibo(shareData);
-    </script>
+                //转发到朋友圈
+                wx.onMenuShareTimeline({
+                    title: '@Model.title',
+                    link: link,
+                    desc: '@Model.contentTitle',
+                    imgUrl: imgUrl,
+                    success: function () {
+                        alert('转发成功！');
+                    },
+                    cancel: function () {
+                        alert('转发失败！');
+                    }
+                });
+                //转发给朋友
+                wx.onMenuShareAppMessage({
+                    title: '@Model.title',
+                    desc: '@Model.contentTitle',
+                    link: link,
+                    imgUrl: imgUrl,
+                    type: 'link',
+                    dataUrl: '',
+                    success: function () {
+                        alert('转发成功！');
+                    },
+                    cancel: function () {
+                        alert('转发失败！');
+                    }
+                });
+        });
+        </script>
 </head>
 <body>
 
@@ -92,7 +110,7 @@
         <div id="img-content">
             <h2 class="rich_media_title" id="activity-name"> @Model.title </h2>
             <div id="meta_content" class="rich_media_meta_list">
-                <span id="copyright_logo" class="rich_media_meta icon_appmsg_tag default">原创</span>
+                <span id="copyright_logo" class="rich_media_meta icon_appmsg_tag default">作者</span>
                 <span class="rich_media_meta rich_media_meta_nickname" id="profileBt">
                     <a href="javascript:void(0);"> @Model.author </a>
                     <div id="js_profile_qrcode" class="profile_container" style="display:none;">
@@ -102,14 +120,17 @@
                     </div>
                 </span>
                 <em id="publish_time" class="rich_media_meta rich_media_meta_text">@Model.time.ToString("yyyy/MM/dd ")</em>
-                <p class="rich_media_meta_primary rich_media_meta_text">作者&nbsp;@Model.author</p>
+                
+            </div>
+            <div id="meta_content" class="rich_media_meta_list">
+                <audio id="audio" src="@Model.Music" controls autoplay="true"></audio>
             </div>
             <div class="rich_media_content " id="js_content">
+                <p style="padding-left: 0.5em;padding-right: 0.5em;letter-spacing: 1px;line-height: 1.75em;"><strong><span style="font-size: 15px;">@Model.contentTitle</span></strong></p>
                 @Html.Raw(Model.content)
             </div>
         </div>
     </div>
-    <embed src="@Model.Music" autostart="true" loop="true" hidden="true"></embed>
     <script>
         $(function () {
 

@@ -33,6 +33,10 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Models
         /// <summary>
         /// 内容
         /// </summary>
+        public string contentTitle { get; set; }
+        /// <summary>
+        /// 内容
+        /// </summary>
         public string content { get; set; }
         /// <summary>
         /// 标题
