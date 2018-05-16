@@ -19,6 +19,7 @@ using Senparc.Weixin;
 using Anker.WeiXin.MP.CoreDynamicShow.Models;
 using Senparc.Weixin.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
@@ -27,7 +28,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         public ActionResult OAuth(string art)
         {
             return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-              "http://www.nbug.xin/Show/Index?returnUrl=" + "".UrlEncode(),
+              "http://www.nbug.xin/Show/Index?art=" + art,
               "", OAuthScope.snsapi_userinfo));
         }
         public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
@@ -59,7 +60,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 if (string.IsNullOrEmpty(code))
                 {
-                    return Redirect("/Show/OAuth");
+                    return Redirect("/Show/OAuth?art="+art);
 
                 }
                 else
@@ -72,7 +73,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             if (user == null)
                 return Redirect("/Show/OAuth?art=" + art);
-            var url = Server.GetAbsoluteUri(HttpContext.Request);
+            var url = "http://www.nbug.xin/Show/Index?art=" + art;
             var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
             if (article == null) return Content("错误");
             ViewBag.user = user;
@@ -132,6 +133,29 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 
 
 
+        }
+
+        public async Task<IActionResult> Js()
+        {
+            return View();
+        }
+        public async Task<IActionResult> images()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            for (int i = 1; i < 16; i++)
+            {
+                if (i > 1)
+                { sb.Append(",{"); }
+                else {
+                    sb.Append("{");
+                }
+                
+                sb.AppendFormat(@"""name"":""/Uploads/Images/{0}.jpg"",""caption"": ""girl - {0}""",i);
+                sb.Append("}");
+            }
+            sb.Append("]");
+            return Content(sb.ToString());
         }
 
     }

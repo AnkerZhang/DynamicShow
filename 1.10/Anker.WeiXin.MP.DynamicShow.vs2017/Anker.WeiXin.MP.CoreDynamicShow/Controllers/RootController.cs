@@ -44,7 +44,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
             ViewBag.user = user;
             ViewBag.artlist = artlist;
-            var articleInfoList = await _context.WeiXinArticleInfo.Include(i=>i.user).Where(p => artlist.articleInfoList.Select(s => s.ID).Contains(p.ID)).ToListAsync();
+            var articleInfoList = await _context.WeiXinArticleInfo.Include(i=>i.user).Where(p => artlist.articleInfoList.Select(s => s.ID).Contains(p.ID)).OrderByDescending(p=>p.spendingDate).ToListAsync();
 
             return View(articleInfoList);
         

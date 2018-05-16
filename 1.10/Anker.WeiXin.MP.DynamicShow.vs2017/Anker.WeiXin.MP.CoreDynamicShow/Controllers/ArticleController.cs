@@ -21,6 +21,8 @@ using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 using Senparc.Weixin;
 using Senparc.Weixin.Exceptions;
 using System.DrawingCore;
+//using ImageSharp;
+//using System.DrawingCore;
 
 namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
@@ -38,7 +40,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             HttpContext = accessor.HttpContext;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
 
-            uid =   Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
 
         }
         public ActionResult OAuth()
@@ -101,7 +103,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             foreach (var item in commentInfo)
             {
                 if (item.str == "titleImg") continue;
-                sb.AppendFormat("<p style='padding - left: 0.5em; padding - right: 0.5em; letter - spacing: 1px; line - height: 1.75em; '><span style='font - size: 13px; '>{0}</span></p>", item.str);
+                sb.AppendFormat("<p style='padding-left: 0.5em; padding-right: 0.5em; letter-spacing: 1px; line-height: 1.75em; '><span style='font-size: 13px; '>{0}</span></p>", item.str);
                 sb.AppendFormat("<p> <img src='{0}' /></p>", item.fileName);
             }
             var date = DateTime.Now;
@@ -115,7 +117,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 title = fromData.title,
                 titleImg = commentInfo[0].fileName,
                 userID = user,
-                contentTitle=fromData.contentTitle,
+                contentTitle = fromData.contentTitle,
                 content = sb.ToString()
             };
             await _context.WeiXinArticle.AddAsync(art);
@@ -126,7 +128,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         {
             var str = fromData.strlist[0].Split('^');
             List<CommentInfo> list = new List<CommentInfo>();
-            list.Add(new CommentInfo() { str = "titleImg", fileName = saveImg(fromData.xiaofile,false) });
+            list.Add(new CommentInfo() { str = "titleImg", fileName = saveImg(fromData.xiaofile, false) });
             if (fromData.tu1file != null)
                 list.Add(new CommentInfo() { str = str[0], fileName = saveImg(fromData.tu1file) });
             if (fromData.tu2file != null)
@@ -150,7 +152,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             return list;
         }
 
-        private string saveImg(IFormFile uploadfile,bool b=true)
+        private string saveImg(IFormFile uploadfile, bool b = true)
         {
             var path = _host.WebRootPath;
             var filePath = string.Format("/Uploads/Images/");
@@ -180,22 +182,28 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 //}
                 var strDateTime = DateTime.Now.ToString("yyMMddhhmmssfff"); //取得时间字符串
                 var strRan = Convert.ToString(new Random().Next(100, 999)); //生成三位随机数
-                var saveName = strDateTime + strRan + fileExtension.Split('.')[0]+".jpg";
+                var saveName = strDateTime + strRan + fileExtension.Split('.')[0] + ".jpg";
                 //插入图片数据
                 using (FileStream fs = System.IO.File.Create(path + filePath + saveName))
                 {
                     uploadfile.CopyTo(fs);
                     fs.Flush();
                 }
-                if (b)
+                try
                 {
-                    update_picture(path + filePath, saveName, path + filePath + saveName);
+                    if (b)
+                    {
+                        update_picture(path + filePath, saveName, path + filePath + saveName);
+                    }
+                    else
+                    {
+                        update_picture(path + filePath, saveName, path + filePath + saveName, 100, 100);
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    update_picture(path + filePath, saveName, path + filePath + saveName,100,100);
+                    return filePath + saveName;
                 }
-                return filePath + saveName;
             }
             return null;
         }

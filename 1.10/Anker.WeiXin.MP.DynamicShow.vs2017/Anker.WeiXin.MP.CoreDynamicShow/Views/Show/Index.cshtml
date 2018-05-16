@@ -64,7 +64,7 @@
 
         wx.error(function (res) {
             console.log(res);
-            alert('验证失败');
+            //alert('验证失败');
         });
 
         wx.ready(function () {
@@ -76,7 +76,6 @@
                 wx.onMenuShareTimeline({
                     title: '@Model.title',
                     link: link,
-                    desc: '@Model.contentTitle',
                     imgUrl: imgUrl,
                     success: function () {
                         alert('转发成功！');
@@ -88,7 +87,7 @@
                 //转发给朋友
                 wx.onMenuShareAppMessage({
                     title: '@Model.title',
-                    desc: '@Model.contentTitle',
+                    desc: '分享给朋友',
                     link: link,
                     imgUrl: imgUrl,
                     type: 'link',
