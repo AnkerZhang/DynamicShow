@@ -1,4 +1,4 @@
-﻿
+﻿@model Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleModel
 @{
     Layout = null;
 }
@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>纯js和CSS3分散式宝丽来图片画廊</title>
+    <title>@ViewBag.user.nickname</title>
     <link href="~/css/polaroid-gallery.css" rel="stylesheet" />
     <style type="text/css">
         #xmt-collection {
@@ -918,16 +918,104 @@
                         background-color: #e7e7eb
                     }
     </style>
+    <script src="~/js/jquery-1.9.1.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@ViewBag.jssdkUiPackage.AppId', // 必填，公众号的唯一标识
+            timestamp: '@ViewBag.jssdkUiPackage.Timestamp', // 必填，生成签名的时间戳
+            nonceStr: '@ViewBag.jssdkUiPackage.NonceStr', // 必填，生成签名的随机串
+            signature: '@ViewBag.jssdkUiPackage.Signature',// 必填，签名
+            jsApiList: [
+                    'checkJsApi',
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo',
+                    'hideMenuItems',
+                    'showMenuItems',
+                    'hideAllNonBaseMenuItem',
+                    'showAllNonBaseMenuItem',
+                    'translateVoice',
+                    'startRecord',
+                    'stopRecord',
+                    'onRecordEnd',
+                    'playVoice',
+                    'pauseVoice',
+                    'stopVoice',
+                    'uploadVoice',
+                    'downloadVoice',
+                    'chooseImage',
+                    'previewImage',
+                    'uploadImage',
+                    'downloadImage',
+                    'getNetworkType',
+                    'openLocation',
+                    'getLocation',
+                    'hideOptionMenu',
+                    'showOptionMenu',
+                    'closeWindow',
+                    'scanQRCode',
+                    'chooseWXPay',
+                    'openProductSpecificView',
+                    'addCard',
+                    'chooseCard',
+                    'openCard'
+            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2。详见：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
+        });
+
+        wx.error(function (res) {
+            console.log(res);
+            //alert('验证失败');
+        });
+
+        wx.ready(function () {
+            var url = 'http://www.nbug.xin';
+            var link = '@ViewBag.url';
+                var imgUrl = url + '@Model.titleImg';
+
+                //转发到朋友圈
+                wx.onMenuShareTimeline({
+                    title: '@Model.title',
+                    link: link,
+                    imgUrl: imgUrl,
+                    success: function () {
+                        alert('转发成功！');
+                    },
+                    cancel: function () {
+                        alert('转发失败！');
+                    }
+                });
+                //转发给朋友
+                wx.onMenuShareAppMessage({
+                    title: '@Model.title',
+                    desc: '分享给朋友',
+                    link: link,
+                    imgUrl: imgUrl,
+                    type: 'link',
+                    dataUrl: '',
+                    success: function () {
+                        alert('转发成功！');
+                    },
+                    cancel: function () {
+                        alert('转发失败！');
+                    }
+                });
+                var globalAudio = document.getElementById("audio");
+                globalAudio.play();
+        });
+        autoPlayAudio();
+    </script>
 </head>
 <body class="fullscreen">
     <div  class="fullscreen">
         <div id="page-content" class="rich_media_area_primary">
             <div id="img-content">
-                <p style="padding-left: 0.5em;padding-right: 0.5em;letter-spacing: 1px;line-height: 1.75em;"><strong><span style="font-size: 15px;">Model.contentTitle</span></strong></p>
                 <div id="meta_content" style="display:none">
-                    <audio id="audio" src="Model.Music" controls autoplay="true"></audio>
+                    <audio id="audio" src="@Model.Music" controls autoplay="true"></audio>
                 </div>
-                <p style="padding-left: 0.5em;padding-right: 0.5em;letter-spacing: 1px;line-height: 1.75em;"><strong><span style="font-size: 15px;">Model.contentTitle</span></strong></p>
+                <p style="padding-left: 0.5em;padding-right: 0.5em;letter-spacing: 1px;line-height: 1.75em;"><strong><span style="font-size: 15px;">@Model.contentTitle</span></strong></p>
             </div>
         </div>
     </div>

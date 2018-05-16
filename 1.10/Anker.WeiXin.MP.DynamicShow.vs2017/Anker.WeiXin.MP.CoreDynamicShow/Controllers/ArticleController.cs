@@ -100,12 +100,33 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             var user = await _context.WeiXinUser.FirstOrDefaultAsync(f => f.ID == uid);
             if (user == null) return Content("Session 错误");
             StringBuilder sb = new StringBuilder();
-            foreach (var item in commentInfo)
+            if (fromData.zuozhe == null || fromData.zuozhe == "")
             {
-                if (item.str == "titleImg") continue;
-                sb.AppendFormat("<p style='padding-left: 0.5em; padding-right: 0.5em; letter-spacing: 1px; line-height: 1.75em; '><span style='font-size: 13px; '>{0}</span></p>", item.str);
-                sb.AppendFormat("<p> <img src='{0}' /></p>", item.fileName);
+                sb.Append("[");
+                for (int i = 0; i < commentInfo.Count; i++)
+                {
+                    if (commentInfo[i].str == "titleImg") continue;
+                    if (i > 1)
+                    { sb.Append(",{"); }
+                    else
+                    {
+                        sb.Append("{");
+                    }
+                    sb.AppendFormat(@"""name"":""{0}"",""caption"": ""{1}""", commentInfo[i].fileName, commentInfo[i].str);
+                    sb.Append("}");
+                }
+                sb.Append("]");
             }
+            else
+            {
+                foreach (var item in commentInfo)
+                {
+                    if (item.str == "titleImg") continue;
+                    sb.AppendFormat("<p style='padding-left: 0.5em; padding-right: 0.5em; letter-spacing: 1px; line-height: 1.75em; '><span style='font-size: 13px; '>{0}</span></p>", item.str);
+                    sb.AppendFormat("<p> <img src='{0}' /></p>", item.fileName);
+                }
+            }
+
             var date = DateTime.Now;
             var art = new WeiXinArticleModel()
             {
@@ -149,6 +170,16 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 list.Add(new CommentInfo() { str = str[8], fileName = saveImg(fromData.tu9file) });
             if (fromData.tu10file != null)
                 list.Add(new CommentInfo() { str = str[9], fileName = saveImg(fromData.tu10file) });
+            if (fromData.tu11file != null)
+                list.Add(new CommentInfo() { str = str[10], fileName = saveImg(fromData.tu11file) });
+            if (fromData.tu12file != null)
+                list.Add(new CommentInfo() { str = str[11], fileName = saveImg(fromData.tu12file) });
+            if (fromData.tu13file != null)
+                list.Add(new CommentInfo() { str = str[12], fileName = saveImg(fromData.tu13file) });
+            if (fromData.tu14file != null)
+                list.Add(new CommentInfo() { str = str[13], fileName = saveImg(fromData.tu14file) });
+            if (fromData.tu15file != null)
+                list.Add(new CommentInfo() { str = str[14], fileName = saveImg(fromData.tu15file) });
             return list;
         }
 
@@ -199,6 +230,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                     {
                         update_picture(path + filePath, saveName, path + filePath + saveName, 100, 100);
                     }
+                    return filePath +"C"+ saveName;
                 }
                 catch (Exception)
                 {
@@ -225,7 +257,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
         /// <param name="filePath">文件路径，带文件名</param>  
         /// <param name="_width">分辨率的宽</param>  
         /// <param name="_height">分辨率的高</param>  
-        public void update_picture(string fileFoldUrl, string fileName, string filePath, int _width = 480, int _height = 640)
+        public string update_picture(string fileFoldUrl, string fileName, string filePath, int _width = 480, int _height = 640)
         {
             byte[] zp = this.load_pictMemory(filePath);
 
@@ -256,9 +288,10 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 
             FileInfo[] fis = dti.GetFiles();
 
-            string fileUrl = fileFoldUrl + fileName;
+            string fileUrl = fileFoldUrl + "C"+fileName;
 
             btp.Save(fileUrl);
+            return "C" + fileName;
         }
         /// <summary>  
         /// 获取指定文件流的字节大小  

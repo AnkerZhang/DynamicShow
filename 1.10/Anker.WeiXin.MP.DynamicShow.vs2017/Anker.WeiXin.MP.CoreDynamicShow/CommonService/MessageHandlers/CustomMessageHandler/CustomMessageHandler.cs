@@ -69,7 +69,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
         {
             log.Info("触发了 欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]+++++++++++");
             var responseMessage = ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(requestMessage);
-            responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]";
+            responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑] 现在还处于初级测试阶段有bug尚未解决敬请谅解";
             return responseMessage;
         }
         public override void OnExecuting()
@@ -98,6 +98,11 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
             log.Info(string.Format("日志记录:----处理文字请求", responseMessage.Content));
             var requestHandler =
                 requestMessage.StartHandler()
+                .Keyword("馈", () =>
+                {
+                    responseMessage.Content = "谢谢您的反馈，祝您生活愉快[愉快]";
+                    return responseMessage;
+                })
                  .Keyword("关键字", () =>
                  {
                      responseMessage.Content = WeiXin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMessageHandler.Service.LocationSercice.GetText("关键字");
@@ -139,31 +144,38 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                      return responseMessage;
                  }).Default(() =>
                  {
-                     var result = new StringBuilder();
-                     result.AppendFormat("您刚才发送了文字信息：{0}\r\n\r\n", requestMessage.Content);
-                     if (CurrentMessageContext.RequestMessages.Count > 1)
+                     if (requestMessage.Content.Substring(0, 2) == "反馈")
                      {
-                         result.AppendFormat("您刚才还发送了如下消息（{0}/{1}）：\r\n", CurrentMessageContext.RequestMessages.Count,
-                             CurrentMessageContext.StorageData);
-                         for (int i = CurrentMessageContext.RequestMessages.Count - 2; i >= 0; i--)
-                         {
-                             var historyMessage = CurrentMessageContext.RequestMessages[i];
-                             result.AppendFormat("{0} 【{1}】{2}\r\n",
-                                 historyMessage.CreateTime.ToString("HH:mm:ss"),
-                                 historyMessage.MsgType.ToString(),
-                                 (historyMessage is RequestMessageText)
-                                     ? (historyMessage as RequestMessageText).Content
-                                     : "[非文字类型]"
-                                 );
-                         }
-                         result.AppendLine("\r\n");
+                         responseMessage.Content= "谢谢您的反馈，祝您生活愉快[愉快]，如有问题请联系WX:17600603214";
                      }
-                     result.AppendFormat("如果您在{0}分钟内连续发送消息，记录将被自动保留（当前设置：最多记录{1}条）。过期后记录将会自动清除。\r\n",
-                         WeixinContext.ExpireMinutes, WeixinContext.MaxRecordCount);
-                     result.AppendLine("\r\n");
-                 result.AppendLine(
-                     "您还可以发送【位置】【图片】【语音】【视频】等类型的信息（注意是这几种类型，不是这几个文字），查看不同格式的回复。);");
-                     responseMessage.Content = result.ToString();
+                     else
+                     {
+                         var result = new StringBuilder();
+                         result.AppendFormat("您刚才发送了文字信息：{0}\r\n\r\n", requestMessage.Content);
+                         if (CurrentMessageContext.RequestMessages.Count > 1)
+                         {
+                             result.AppendFormat("您刚才还发送了如下消息（{0}/{1}）：\r\n", CurrentMessageContext.RequestMessages.Count,
+                                 CurrentMessageContext.StorageData);
+                             for (int i = CurrentMessageContext.RequestMessages.Count - 2; i >= 0; i--)
+                             {
+                                 var historyMessage = CurrentMessageContext.RequestMessages[i];
+                                 result.AppendFormat("{0} 【{1}】{2}\r\n",
+                                     historyMessage.CreateTime.ToString("HH:mm:ss"),
+                                     historyMessage.MsgType.ToString(),
+                                     (historyMessage is RequestMessageText)
+                                         ? (historyMessage as RequestMessageText).Content
+                                         : "[非文字类型]"
+                                     );
+                             }
+                             result.AppendLine("\r\n");
+                         }
+                         result.AppendFormat("如果您在{0}分钟内连续发送消息，记录将被自动保留（当前设置：最多记录{1}条）。过期后记录将会自动清除。\r\n",
+                             WeixinContext.ExpireMinutes, WeixinContext.MaxRecordCount);
+                         result.AppendLine("\r\n");
+                         result.AppendLine(
+                             "您还可以发送【位置】【图片】【语音】【视频】等类型的信息（注意是这几种类型，不是这几个文字），查看不同格式的回复。);");
+                         responseMessage.Content = result.ToString();
+                     }
                      return responseMessage;
                  });
             return requestHandler.GetResponseMessage() as IResponseMessageBase;
@@ -351,7 +363,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                 case "Description":
                     {
                         var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
-                        strongResponseMessage.Content = "测试使用说明";
+                        strongResponseMessage.Content = "反馈信息：只需要在对话框中，输入反馈+反馈内容 即可 例如【反馈 速度加载太慢】";
                         reponseMessage = strongResponseMessage;
                     }
                     break;

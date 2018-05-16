@@ -25,10 +25,10 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
     public class ShowController : BaseController
     {
-        public ActionResult OAuth(string art)
+        public ActionResult OAuth(string art,string action)
         {
             return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-              "http://www.nbug.xin/Show/Index?art=" + art,
+              "http://www.nbug.xin/Show/"+ action + "?art=" + art,
               "", OAuthScope.snsapi_userinfo));
         }
         public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
@@ -60,7 +60,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 if (string.IsNullOrEmpty(code))
                 {
-                    return Redirect("/Show/OAuth?art="+art);
+                    return Redirect("/Show/OAuth?art="+art + "&action=Index");
 
                 }
                 else
@@ -72,7 +72,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
             user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             if (user == null)
-                return Redirect("/Show/OAuth?art=" + art);
+                return Redirect("/Show/OAuth?art=" + art + "&action=Index");
             var url = "http://www.nbug.xin/Show/Index?art=" + art;
             var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
             if (article == null) return Content("错误");
@@ -135,27 +135,49 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 
         }
 
-        public async Task<IActionResult> Js()
+        public async Task<IActionResult> Js(string art, string code, string state)
         {
-            return View();
-        }
-        public async Task<IActionResult> images()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("[");
-            for (int i = 1; i < 16; i++)
+            if (art != null && art != "")
             {
-                if (i > 1)
-                { sb.Append(",{"); }
-                else {
-                    sb.Append("{");
-                }
-                
-                sb.AppendFormat(@"""name"":""/Uploads/Images/{0}.jpg"",""caption"": ""girl - {0}""",i);
-                sb.Append("}");
+                HttpContext.Session.SetString("art", art);
             }
-            sb.Append("]");
-            return Content(sb.ToString());
+            else
+            {
+                art = HttpContext.Session.GetString("art");
+            }
+            log.Info("/Show/Js/++++++++++++++" + uid);
+            WeiXinUserModel user = null;
+            if (uid == 0)
+            {
+                if (string.IsNullOrEmpty(code))
+                {
+                    return Redirect("/Show/OAuth?art=" + art+"&action=Js");
+
+                }
+                else
+                {
+                    adduser(code, _context);
+                    uid = Convert.ToInt32(HttpContext.Session.GetString("uid"));
+                }
+            }
+            user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
+            if (user == null)
+                return Redirect("/Show/OAuth?art=" + art + "&action=Js");
+            var url = "http://www.nbug.xin/Show/Js?art=" + art;
+            var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
+            if (article == null) return Content("错误");
+            ViewBag.user = user;
+            var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
+            ViewBag.jssdkUiPackage = jssdkUiPackage;
+            ViewBag.url = url;
+            return View(article);
+        }
+        public async Task<IActionResult> images(string art)
+        {
+            log.Info("/Show/images/++++++++++++++art:" + art);
+            var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
+            if (article == null) return Content("错误");
+            return Content(article.content);
         }
 
     }

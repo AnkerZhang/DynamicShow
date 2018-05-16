@@ -37,7 +37,7 @@
             </div>
             <div class="form-group">
                 <label >作者</label>
-                <input type="text" class="form-control" id="zuozhe" placeholder="作者">
+                <input type="text" class="form-control" id="zuozhe" placeholder="作者不填写将采用图片轮询格式">
             </div>
             <div class="form-group">
                 <label >分享链接小图</label>
@@ -71,6 +71,11 @@
     <script>
         var index = 0;
         function addcomment() {
+            if (index > 14)
+            {
+                alert('目前只支持上传15组');
+                return;
+            }
             index++;
             var htmladd = ' <div class="form-group comment">';
             htmladd += '  <label >内容文字</label>';
@@ -134,7 +139,13 @@
                 success: function (data) {
                     data = JSON.parse(data);
                     if (data.isSuccess) {
-                        location.href = "/Show/Index?art=" + data.returnMsg
+                        if ($("#zuozhe").val().trim()!="") {
+                            location.href = "/Show/Index?art=" + data.returnMsg
+                        } else
+                        { 
+                            location.href = "/Show/Js?art=" + data.returnMsg
+                        }
+                        
                     } else {
                         app.message = data.returnMsg;
 

@@ -9,3 +9,14 @@
 2018-05-16 12:29:24,040 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
 2018-05-16 13:10:01,238 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
 2018-05-16 13:13:07,689 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
+2018-05-16 13:49:30,499 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
+2018-05-16 15:18:10,388 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
+2018-05-16 15:18:36,532 [10] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Article/MyArticle/++++++++++++++1
+2018-05-16 15:45:21,005 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
+2018-05-16 15:45:28,681 [6] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Show/Index/++++++++++++++1
+2018-05-16 15:45:37,816 [10] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Show/Js/++++++++++++++1
+2018-05-16 15:45:41,023 [11] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Show/images/++++++++++++++art:79A2A0D131953CF555F4BEC5FCC32257
+2018-05-16 15:58:03,437 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
+2018-05-16 15:58:05,296 [10] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Article/MyArticle/++++++++++++++1
+2018-05-16 15:58:42,748 [16] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Article/MyArticle/++++++++++++++1
+2018-05-16 15:58:54,980 [5] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Article/MyArticle/++++++++++++++1

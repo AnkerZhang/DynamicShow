@@ -24,6 +24,11 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Models
         public IFormFile tu8file { get; set; }
         public IFormFile tu9file { get; set; }
         public IFormFile tu10file { get; set; }
+        public IFormFile tu11file { get; set; }
+        public IFormFile tu12file { get; set; }
+        public IFormFile tu13file { get; set; }
+        public IFormFile tu14file { get; set; }
+        public IFormFile tu15file { get; set; }
 
     }
     public class CommentInfo

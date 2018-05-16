@@ -61,12 +61,12 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 url = "http://www.nbug.xin:5000",
                 name = "Anker主页"
             });
-            subButton3.sub_button.Add(new SingleViewButton()
-            {
-                url = "http://www.nbug.xin:5000/Home/Board",
-                name = "反馈信息"
-            });
-
+            subButton3.sub_button.Add(
+                new SingleClickButton()
+                {
+                    key = "Description",
+                    name = "反馈信息"
+                });
             var result = CommonApi.CreateMenu(_senparcWeixinSetting.WeixinAppId, bg);
             return Json(result);
         }

@@ -54,7 +54,15 @@
                         <td><img style="width: 30px;height: 30px;" src="@Model[i].titleImg" /></td>
                         <td>@(Model[i].title.Length > 10 ? Model[i].title.Substring(0, 10) : Model[i].title)</td>
                         <td><a href="/Root/Index?aid=@Model[i].ID">浏览情况</a></td>
-                        <td><a href="/Show/Index?art=@Model[i].qrCode">查看动态</a></td>
+                        @if (Model[i].author!=null&& Model[i].author != "")
+                        {
+                            <td><a href="/Show/Index?art=@Model[i].qrCode">查看动态</a></td>
+                        }
+                        else
+                        {
+                            <td><a href="/Show/Js?art=@Model[i].qrCode">查看动态</a></td>
+                        }
+
                     </tr>
                     }
                     
