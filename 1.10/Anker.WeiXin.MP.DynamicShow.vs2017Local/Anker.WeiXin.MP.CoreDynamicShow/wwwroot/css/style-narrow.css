@@ -1,0 +1,59 @@
+﻿html.narrow {
+    font-size: 58%;
+}
+
+    html.narrow #header {
+        position: relative;
+        width: 100%;
+        top: auto;
+        left: auto;
+        padding: 7.5em 5em;
+        text-align: center;
+        background-size: auto, cover;
+        background-attachment: scroll;
+        background-position: top left, center 30% !important;
+    }
+
+    html.narrow #fixed-header {
+        display: block;
+    }
+
+    html.narrow #widget-container > .spinner,
+    html.narrow .widget {
+        display: none;
+    }
+
+    html.narrow #main {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        padding: 5em;
+    }
+
+@media (max-width: 830px) {
+    #fucking-icp-license {
+        display: none;
+    }
+
+    nav > ul.pagination li.button {
+        width: 47.5%;
+    }
+
+    nav > ul.pagination .button a {
+        width: 100%;
+    }
+
+    nav > ul.pagination li:not(.button) {
+        display: none;
+    }
+
+    nav > ul.pagination li > a {
+        font-size: 16px;
+        font-size: 1.6rem;
+    }
+
+    article + nav ul.pagination .button:last-of-type {
+        float: right;
+        margin-left: auto;
+    }
+}

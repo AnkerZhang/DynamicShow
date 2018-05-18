@@ -25,12 +25,12 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
     public class ShowController : BaseController
     {
-        public ActionResult OAuth(string art,string action)
-        {
-            return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-              "http://www.nbug.xin/Show/"+ action + "?art=" + art,
-              "", OAuthScope.snsapi_userinfo));
-        }
+        //public new ActionResult  OAuth(string action)
+        //{
+        //    return Redirect(OAuthApi.GetAuthorizeUrl(appId,
+        //      "http://www.nbug.xin/Show/"+ action,
+        //      "", OAuthScope.snsapi_userinfo));
+        //}
         public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
         {
             _host = host;
@@ -41,7 +41,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             token = _senparcWeixinSetting.Token;
             HttpContext = accessor.HttpContext;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
-            log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
+            log = LogManager.GetLogger(Startup.repository.Name, typeof(ShowController));
             uid =  Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
         }
         public async Task<IActionResult> Index(string art, string code, string state)
@@ -60,7 +60,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 if (string.IsNullOrEmpty(code))
                 {
-                    return Redirect("/Show/OAuth?art="+art + "&action=Index");
+                    return Redirect("/Show/OAuth?url=Show/Index");
 
                 }
                 else
@@ -72,7 +72,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
             user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             if (user == null)
-                return Redirect("/Show/OAuth?art=" + art + "&action=Index");
+                return Redirect("/Show/OAuth?url=Show/Index");
             var url = "http://www.nbug.xin/Show/Index?art=" + art;
             var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
             if (article == null) return Content("错误");
@@ -124,7 +124,6 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                         articleInfo.spendingDate = articleInfo.spendingDate + 3;
                         break;
                     default:
-
                         break;
                 }
                 _context.Update(articleInfo);
@@ -151,7 +150,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 if (string.IsNullOrEmpty(code))
                 {
-                    return Redirect("/Show/OAuth?art=" + art+"&action=Js");
+                    return Redirect("/Show/OAuth?url=Show/Js");
 
                 }
                 else
@@ -162,7 +161,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
             user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             if (user == null)
-                return Redirect("/Show/OAuth?art=" + art + "&action=Js");
+                return Redirect("/Show/OAuth?url=Show/Js");
             var url = "http://www.nbug.xin/Show/Js?art=" + art;
             var article = await _context.WeiXinArticle.FirstOrDefaultAsync(f => f.qrCode == art);
             if (article == null) return Content("错误");

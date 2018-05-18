@@ -1,0 +1,52 @@
+﻿#header {
+    width: 38.2%;
+}
+
+#main {
+    margin-left: 38.2%;
+    max-width: 61.8%;
+    padding: 5em;
+    width: calc(100% - 38.2%);
+}
+
+.widget.headings > img {
+    max-width: 100px;
+}
+
+.widget.intro,
+.widget.comments {
+    padding: 0 7.5em;
+}
+
+article > header > h1 {
+    font-size: 40px;
+    font-size: 4rem;
+}
+
+#comment-bar {
+    width: 5em;
+}
+
+#comment-icon i {
+    font-size: 50px;
+    font-size: 5rem;
+}
+
+#comment-icon {
+    width: 5rem;
+    margin-left: -2.5rem;
+}
+
+    #comment-icon span {
+        top: 3px;
+        right: 8px;
+    }
+
+#next-post article {
+    width: 61.8%;
+}
+
+nav > ul.pagination li > a {
+    font-size: 16px;
+    font-size: 1.6rem;
+}

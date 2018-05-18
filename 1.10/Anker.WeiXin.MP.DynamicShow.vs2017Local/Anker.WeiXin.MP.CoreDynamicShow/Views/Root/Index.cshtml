@@ -1,0 +1,99 @@
+﻿@model List<Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleInfoModel>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link href="~/css/bootstrap-theme.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.9.1.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="~/js/bootstrap.js"></script>
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="@ViewBag.user.headimgurl" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">@ViewBag.user.nickname</h4>
+                <h4 class="media-heading">@ViewBag.artlist.title</h4>
+            </div>
+        </div>
+        <div class="bs-example" data-example-id="striped-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>头像</th>
+                        <th>昵称</th>
+                        <th>OpenNum</th>
+                        <th>浏览时长</th>
+                        <th>BeginTime</th>
+                        <th>EndTime</th>
+                        <th>系数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        if (Model[i].user.sex == 1)
+                        {
+                            <tr class="alert alert-info">
+                                <th scope="row">@(i + 1)</th>
+                                <td><img style="width: 30px;height: 30px;" src="@Model[i].user.headimgurl" /></td>
+                                <td>@Model[i].user.nickname</td>
+                                <td>@Model[i].opentNumber</td>
+                                <td>@(Model[i].amount > 60 ? Model[i].amount / 60 + "分钟" : Model[i].amount + "秒") </td>
+                                <td>@Model[i].beginTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].endTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].spendingDate</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="alert alert-danger">
+                                <th scope="row">@(i + 1)</th>
+                                <td><img style="width: 30px;height: 30px;" src="@Model[i].user.headimgurl" /></td>
+                                <td>@Model[i].user.nickname</td>
+                                <td>@Model[i].opentNumber</td>
+                                <td>@(Model[i].amount > 60 ? Model[i].amount / 60 + "分钟" : Model[i].amount + "秒") </td>
+                                <td>@Model[i].beginTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].endTime.ToString("yy/MM/dd hh:mm:ss")</td>
+                                <td>@Model[i].spendingDate</td>
+                            </tr>
+                        }
+
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-4"><a class="btn btn-primary btn-lg" style="float:right;margin-right:10px;" onclick="location.reload();" role="button">刷新</a></div>
+        </div>
+   
+    </div>
+    <h3></h3>
+
+</body>
+</html>

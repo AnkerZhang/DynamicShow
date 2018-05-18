@@ -1,0 +1,32 @@
+
+[[[接口调用]]]
+[2018/5/6 12:24:52]
+[线程：6]
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    Result：
+{"errcode":40164,"errmsg":"invalid ip 115.34.163.35, not in whitelist hint: [sZIfDA06932994]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/6 12:24:54]
+[线程：6]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    errcode：40164
+    errmsg：invalid ip 115.34.163.35, not in whitelist hint: [sZIfDA06932994]
+
+[[[接口调用]]]
+[2018/5/6 12:33:24]
+[线程：6]
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    Result：
+{"errcode":40164,"errmsg":"invalid ip 115.34.163.35, not in whitelist hint: [onJpWa02053612]"}
+
+[[[ErrorJsonResultException]]]
+[2018/5/6 12:33:25]
+[线程：6]
+    ErrorJsonResultException
+    AccessTokenOrAppId：null
+    URL：https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4673f5bfc87da557&secret=42f119bb1f2cf8e201362d938aa11c9b
+    errcode：40164
+    errmsg：invalid ip 115.34.163.35, not in whitelist hint: [onJpWa02053612]

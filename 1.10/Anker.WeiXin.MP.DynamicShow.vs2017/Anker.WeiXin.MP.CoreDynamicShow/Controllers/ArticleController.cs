@@ -39,16 +39,15 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             HttpContext = accessor.HttpContext;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-
-            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid =Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
 
         }
-        public ActionResult OAuth()
-        {
-            return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-              "http://www.nbug.xin/Article/MyArticle?returnUrl=" + "".UrlEncode(),
-              "", OAuthScope.snsapi_userinfo));
-        }
+        //public ActionResult OAuth()
+        //{
+        //    return Redirect(OAuthApi.GetAuthorizeUrl(appId,
+        //      "http://www.nbug.xin/Article/MyArticle?returnUrl=" + "".UrlEncode(),
+        //      "", OAuthScope.snsapi_userinfo));
+        //}
         public async Task<IActionResult> MyArticle(string code, string state)
         {
 
@@ -58,7 +57,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 if (uid == 0)
                 {
-                    return Redirect("/Article/OAuth");
+                    return Redirect("/Article/OAuth?url=Article/MyArticle");
                 }
                 else
                 {
@@ -128,22 +127,30 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             }
 
             var date = DateTime.Now;
-            var art = new WeiXinArticleModel()
+            var art = new WeiXinArticleModel();
+            if (fromData.type== "文章型")
             {
-                author = fromData.zuozhe,
-                Music = "/music/" + fromData.music + ".mp3",
-                state = 1,
-                qrCode = md5(date.ToString()),
-                time = date,
-                title = fromData.title,
-                titleImg = commentInfo[0].fileName,
-                userID = user,
-                contentTitle = fromData.contentTitle,
-                content = sb.ToString()
-            };
+                art.author = fromData.zuozhe;
+            }
+            art.Music = "/music/" + fromData.music + ".mp3";
+            art.state = 1;
+            art.qrCode = md5(date.ToString());
+            art.time = date;
+            art.title = fromData.title;
+            art.titleImg = commentInfo[0].fileName;
+            art.userID = user;
+            art.contentTitle = fromData.contentTitle;
+            art.content = sb.ToString();
             await _context.WeiXinArticle.AddAsync(art);
             await _context.SaveChangesAsync();
-            return new JsonResult(new { isSuccess = true, returnMsg = art.qrCode });
+            if (fromData.type == "文章型")
+            {
+                return new JsonResult(new { isSuccess = true, returnMsg = "1|" + art.qrCode });
+            } else if (fromData.type == "图片轮询型")
+            {
+                return new JsonResult(new { isSuccess = true, returnMsg = "2|" + art.qrCode });
+            }
+            return new JsonResult(new { isSuccess = false, returnMsg = "类型不支持" });
         }
         private List<CommentInfo> InsertPicture(FromDataModel fromData)
         {
