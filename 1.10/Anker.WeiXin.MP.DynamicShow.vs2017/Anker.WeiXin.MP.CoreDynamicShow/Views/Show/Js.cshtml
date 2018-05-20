@@ -1,6 +1,9 @@
 ﻿@model Anker.WeiXin.MP.CoreDynamicShow.Models.WeiXinArticleModel
+@using static Anker.WeiXin.MP.CoreDynamicShow.CommonService.Utilities.Server
+
 @{
     Layout = null;
+    string title = String2Unicode(Model.title);
 }
 
 <!DOCTYPE html>
@@ -920,7 +923,7 @@
     </style>
     <script src="~/js/jquery-1.9.1.min.js"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script>
+    <script charset="gb2312" language="javascript" type="text/javascript">
         wx.config({
             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: '@ViewBag.jssdkUiPackage.AppId', // 必填，公众号的唯一标识
@@ -977,7 +980,7 @@
 
                 //转发到朋友圈
                 wx.onMenuShareTimeline({
-                    title: '@Model.title',
+                    title: '@title',
                     link: link,
                     imgUrl: imgUrl,
                     success: function () {
@@ -989,7 +992,7 @@
                 });
                 //转发给朋友
                 wx.onMenuShareAppMessage({
-                    title: '@Model.title',
+                    title: '@title',
                     desc: '分享给朋友',
                     link: link,
                     imgUrl: imgUrl,
@@ -1009,7 +1012,7 @@
     </script>
 </head>
 <body class="fullscreen">
-    <div  class="fullscreen">
+    <div class="fullscreen">
         <div id="page-content" class="rich_media_area_primary">
             <div id="img-content">
                 <div id="meta_content" style="display:none">
@@ -1020,18 +1023,18 @@
         </div>
     </div>
     <div id="gallery" class="fullscreen">
-       
+
     </div>
     <div id="nav" class="navbar">
         <button id="preview">&lt; 前一张</button>
         <button id="next">下一张 &gt;</button>
-    </div> 
+    </div>
     <script src="~/js/polaroid-gallery.js"></script>
     <script>
-	    window.onload = function () {
-	        new polaroidGallery("/data/data.json");
-	    }
-           
+        window.onload = function () {
+            new polaroidGallery("/data/data.json");
+        }
+
         $(function () {
 
             $.ajax({
@@ -1061,6 +1064,6 @@
             }
             return paramValue == "" && (paramValue = null), paramValue
         }
-    </script> 
+    </script>
 </body>
 </html>

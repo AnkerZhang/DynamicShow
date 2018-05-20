@@ -39,7 +39,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             HttpContext = accessor.HttpContext;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-            uid =Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
 
         }
         //public ActionResult OAuth()
@@ -128,7 +128,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 
             var date = DateTime.Now;
             var art = new WeiXinArticleModel();
-            if (fromData.type== "文章型")
+            if (fromData.type == "文章型")
             {
                 art.author = fromData.zuozhe;
             }
@@ -146,7 +146,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             if (fromData.type == "文章型")
             {
                 return new JsonResult(new { isSuccess = true, returnMsg = "1|" + art.qrCode });
-            } else if (fromData.type == "图片轮询型")
+            }
+            else if (fromData.type == "图片轮询型")
             {
                 return new JsonResult(new { isSuccess = true, returnMsg = "2|" + art.qrCode });
             }
@@ -227,22 +228,16 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                     uploadfile.CopyTo(fs);
                     fs.Flush();
                 }
-                try
+
+                if (b)
                 {
-                    if (b)
-                    {
-                        update_picture(path + filePath, saveName, path + filePath + saveName);
-                    }
-                    else
-                    {
-                        update_picture(path + filePath, saveName, path + filePath + saveName, 100, 100);
-                    }
-                    return filePath +"C"+ saveName;
+                    update_picture(path + filePath, saveName, path + filePath + saveName);
                 }
-                catch (Exception)
+                else
                 {
-                    return filePath + saveName;
+                    update_picture(path + filePath, saveName, path + filePath + saveName, 100, 100);
                 }
+                return filePath + "C" + saveName;
             }
             return null;
         }
@@ -295,7 +290,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 
             FileInfo[] fis = dti.GetFiles();
 
-            string fileUrl = fileFoldUrl + "C"+fileName;
+            string fileUrl = fileFoldUrl + "C" + fileName;
 
             btp.Save(fileUrl);
             return "C" + fileName;
