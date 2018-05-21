@@ -1,6 +1,0 @@
-C:\Users\Administrator\source\repos\Anker.DynamicShow\Anker.DynamicShow.CommonService\bin\Debug\netcoreapp2.0\Anker.DynamicShow.CommonService.deps.json
-C:\Users\Administrator\source\repos\Anker.DynamicShow\Anker.DynamicShow.CommonService\bin\Debug\netcoreapp2.0\Anker.DynamicShow.CommonService.dll
-C:\Users\Administrator\source\repos\Anker.DynamicShow\Anker.DynamicShow.CommonService\obj\Debug\netcoreapp2.0\Anker.DynamicShow.CommonService.csprojResolveAssemblyReference.cache
-C:\Users\Administrator\source\repos\Anker.DynamicShow\Anker.DynamicShow.CommonService\obj\Debug\netcoreapp2.0\Anker.DynamicShow.CommonService.csproj.CoreCompileInputs.cache
-C:\Users\Administrator\source\repos\Anker.DynamicShow\Anker.DynamicShow.CommonService\obj\Debug\netcoreapp2.0\Anker.DynamicShow.CommonService.AssemblyInfoInputs.cache
-C:\Users\Administrator\source\repos\Anker.DynamicShow\Anker.DynamicShow.CommonService\obj\Debug\netcoreapp2.0\Anker.DynamicShow.CommonService.AssemblyInfo.cs
