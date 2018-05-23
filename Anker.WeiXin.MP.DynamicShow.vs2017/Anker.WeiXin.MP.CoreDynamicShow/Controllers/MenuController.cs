@@ -45,12 +45,30 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ButtonGroup bg = new ButtonGroup();
 
             //二级菜单
-            var subButton = new SingleViewButton()
+            //var subButton = new SingleViewButton()
+            //{
+            //    name = "我要制作",
+            //    url = "http://www.nbug.xin/Article/MyArticle",
+            //};
+            //bg.button.Add(subButton);
+
+            var subButton2 = new SubButton()
             {
-                name = "我要制作",
-                url = "http://www.nbug.xin/Article/MyArticle",
+                name = "我要制作"
             };
-            bg.button.Add(subButton);
+            bg.button.Add(subButton2);
+            subButton2.sub_button.Add(new SingleViewButton()
+            {
+                url = "http://www.nbug.xin/Article/MyArticle",
+                name = "马上制作"
+            });
+            subButton2.sub_button.Add(
+                new SingleViewButton()
+                {
+                    url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=2&sn=90d197cad452714467eac043177fb5ec&chksm=7c25cf6b4b52467d7dacb088ddb8d355fb865934e7bcaf298d30f9335fa1130bb2dc5d23861a#rd",
+                    name = "如何使用"
+                });
+
             var subButton3 = new SubButton()
             {
                 name = "关于我",
@@ -58,7 +76,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             bg.button.Add(subButton3);
             subButton3.sub_button.Add(new SingleViewButton()
             {
-                url = "http://www.nbug.xin:5000",
+                url = "http://www.nbug.xin/Home/Index",
                 name = "Anker主页"
             });
             subButton3.sub_button.Add(

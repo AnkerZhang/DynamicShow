@@ -16,7 +16,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no" />
-    <title>@ViewBag.user.nickname</title>
+    <title>@Model.author</title>
     <style>
         .radius_avatar {
             display: inline-block;
@@ -687,11 +687,14 @@
                 <em id="publish_time" class="rich_media_meta rich_media_meta_text">@Model.time.ToString("yyyy/MM/dd ")</em>
                 
             </div>
+            @if (Model.Music != null && Model.Music != "")
+            {
             <div id="meta_content" class="rich_media_meta_list" >
                 <audio id="audio" src="@Model.Music" controls autoplay="true"></audio>
             </div>
+            }
             <div class="rich_media_content " id="js_content">
-                <p style="padding-left: 0.5em;padding-right: 0.5em;letter-spacing: 1px;line-height: 1.75em;"><strong><span style="font-size: 15px;">@Model.contentTitle</span></strong></p>
+                <p style="padding-left: 0.5em;padding-right: 0.5em;letter-spacing: 1px;line-height: 1.75em;"><strong><span style="font-size: 15px;">&nbsp;&nbsp;@Model.contentTitle</span></strong></p>
                 @Html.Raw(Model.content)
             </div>
         </div>

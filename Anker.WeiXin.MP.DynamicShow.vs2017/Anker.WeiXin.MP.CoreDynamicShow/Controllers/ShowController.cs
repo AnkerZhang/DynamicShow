@@ -25,12 +25,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 {
     public class ShowController : BaseController
     {
-        //public new ActionResult  OAuth(string action)
-        //{
-        //    return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-        //      "http://www.nbug.xin/Show/"+ action,
-        //      "", OAuthScope.snsapi_userinfo));
-        //}
+        
         public ShowController(DynamicShowContext context, IHostingEnvironment host, IOptions<SenparcWeixinSetting> senparcWeixinSetting, IHttpContextAccessor accessor)
         {
             _host = host;

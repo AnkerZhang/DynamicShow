@@ -1,0 +1,3 @@
+2018-05-23 11:05:03,819 [1] INFO  Anker.WeiXin.MP.CoreDynamicShow.Startup [(null)] - Startup
+2018-05-23 11:05:18,840 [11] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ArticleController [(null)] - /Article/MyArticle/++++++++++++++1
+2018-05-23 11:06:15,332 [11] INFO  Anker.WeiXin.MP.CoreDynamicShow.Controllers.ShowController [(null)] - /Show/Index/++++++++++++++0

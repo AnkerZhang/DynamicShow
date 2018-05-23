@@ -881,11 +881,6 @@
         html.ios *[data-action=switch-fullscreen-mode] {
             display: none
         }
-
-        html.ios section#say-hello #comment button i {
-            margin-left: -25px
-        }
-
         html.fucking-ie body.init {
             overflow-y: scroll
         }
@@ -1616,7 +1611,6 @@
 
         wx.error(function (res) {
             console.log(res);
-            alert('验证失败');
         });
 
          wx.ready(function () {
@@ -1685,9 +1679,8 @@
     <!-- Photography -->
     <section id="photography" class="content">
         <div class="container">
-            <h2>前方的路</h2>
-            <p>在业余时间，我喜欢开黑，上网，看电影，在户外悠闲地散步，我热爱旅行，并喜欢用照片记录回忆，尤其是壮美的自然风光。</p>
-            <a href="javascript:;" data-action="reload-montage"></a>
+            @Html.Raw(ViewBag.t3)
+            @Html.Raw(ViewBag.c3)
         </div>
         <div id="montage" class="row uniform 25% ready" data-am-widget="paragraph" data-am-paragraph="{ tableScrollable: true, pureview: true }">
                  <a class="2u 4u(tablet) am-gallery-item" data-location="云南" data-camarts-id="2449" data-camarts-title="永胜山景"><img src="~/Images/77.jpg"></a>

@@ -40,7 +40,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             HttpContext = accessor.HttpContext;
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(HomeController));
-            uid =  Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid =Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
 
         }
 
@@ -84,7 +84,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ViewBag.c7 = num;
             ViewBag.c10 = await GetConfig(10, "c");
             var url = "http://www.nbug.xin/Home/Index";
-            JsSdkUiPackage jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
+            JsSdkUiPackage jssdkUiPackage =  JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
             return View(jssdkUiPackage);
             
         }
@@ -116,7 +116,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ViewBag.name = weiXinUser.nickname;
             ViewBag.ListUser = user;
             var url = "http://www.nbug.xin/Home/Index";
-            var jssdkUiPackage =  JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
+            JsSdkUiPackage jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
             _context.SaveChanges();
             return View(jssdkUiPackage);
         }
@@ -134,7 +134,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             ViewBag.c9 = await GetConfig(9, "c");
             ViewBag.t11 = await GetConfig(11, "t");
             ViewBag.c11 = await GetConfig(11, "c");
-            var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
+            JsSdkUiPackage jssdkUiPackage =  JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
             return View(jssdkUiPackage);
         }
         public async Task<IActionResult> Changelogs()
@@ -289,7 +289,6 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             return Content(u.ticket.ToString());
             //}
         }
-
         public void ArticleApi(string type)
         {
             var user = _context.WeiXinUser.FirstOrDefault(f => f.ID == uid);
@@ -353,6 +352,7 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
 
             }
         }
+
 
     }
 }

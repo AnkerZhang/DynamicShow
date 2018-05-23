@@ -44,6 +44,7 @@
                         <th>标题</th>
                         <th>监控</th>
                         <th>查看</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,20 +55,19 @@
                         <td><img style="width: 30px;height: 30px;" src="@Model[i].titleImg" /></td>
                         <td>@(Model[i].title.Length > 10 ? Model[i].title.Substring(0, 10) : Model[i].title)</td>
                         <td><a href="/Root/Index?aid=@Model[i].ID">浏览情况</a></td>
-                        @if (Model[i].author != null && Model[i].author != "")
-                        {
-                            <td><a href="/Show/Index?art=@Model[i].qrCode">查看动态</a></td>
-                        }
-                        else if (Model[i].ID == 20)
+                        @if (Model[i].ID == 20)
                         {
                             <td><a href="/Home/Index">查看动态</a></td>
                         }
+                        else if (Model[i].author != null && Model[i].author != "")
+                        {
+                            <td><a href="/Show/Index?art=@Model[i].qrCode">查看动态</a></td>
+                        }
                         else
                         {
-
                             <td><a href="/Show/Js?art=@Model[i].qrCode">查看动态</a></td>
                         }
-
+                        <td><button class="btn-danger"  onclick="del('@Model[i].ID','@Model[i].title')" >删除</button></td>
                     </tr>
                     }
                     
@@ -83,6 +83,34 @@
             <p><a class="btn btn-primary btn-lg" href="/Article/Add" role="button">添加</a></p>
         </div>
     </div>
+    <script>
+        function del(aid,title)
+        { 
+            if (confirm("你确定删除" + title+"吗？")) {
+                $.ajax({
+                    url: "/Article/Delete?aid=" + aid,
+                    type: "get",
+                    success: function (data) {
 
+                        if (data.isSuccess) {
+                            location.reload();
+                        } else {
+                            alert(data.returnMsg);
+
+                        }
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+            else {
+                return;
+            } 
+            
+
+        }
+    </script>
 </body>
 </html>

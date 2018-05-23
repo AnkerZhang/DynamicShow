@@ -39,15 +39,9 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             encodingAESKey = _senparcWeixinSetting.EncodingAESKey;
             HttpContext = accessor.HttpContext;
             log = LogManager.GetLogger(Startup.repository.Name, typeof(ArticleController));
-            uid = Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
+            uid =Convert.ToInt32(HttpContext.Session.GetString("uid") == null ? "0" : HttpContext.Session.GetString("uid"));
 
         }
-        //public ActionResult OAuth()
-        //{
-        //    return Redirect(OAuthApi.GetAuthorizeUrl(appId,
-        //      "http://www.nbug.xin/Article/MyArticle?returnUrl=" + "".UrlEncode(),
-        //      "", OAuthScope.snsapi_userinfo));
-        //}
         public async Task<IActionResult> MyArticle(string code, string state)
         {
 
@@ -70,18 +64,19 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
                 uid = Convert.ToInt32(HttpContext.Session.GetString("uid"));
                 user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
             }
-            var artlist = await _context.WeiXinArticle.Where(w => w.userID == user).ToListAsync();
+            var artlist = await _context.WeiXinArticle.Where(w => w.userID == user&&w.state==1).ToListAsync();
             ViewBag.user = user;
             return View(artlist);
         }
-        public async Task<IActionResult> updata(int aid)
+        public async Task<IActionResult> Delete(int aid)
         {
-            if (uid == 0) return Content("Session 错误");
+            if (uid == 0) return new JsonResult(new { isSuccess = false, returnMsg = "请重新登录" });
             var art = await _context.WeiXinArticle.Include(i => i.userID).FirstOrDefaultAsync(f => (f.ID == aid && f.userID.ID == uid));
-
-            var user = await _context.WeiXinUser.FirstOrDefaultAsync(u => u.ID == Convert.ToInt32(uid));
-            ViewBag.user = user;
-            return View(art);
+            if(art==null) return new JsonResult(new { isSuccess = false, returnMsg = "不存在改文章" });
+            art.state = 0;
+            _context.Update(art);
+            await _context.SaveChangesAsync();
+            return new JsonResult(new { isSuccess = true, returnMsg = "删除成功" });
         }
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -132,7 +127,8 @@ namespace Anker.WeiXin.MP.CoreDynamicShow.Controllers
             {
                 art.author = fromData.zuozhe;
             }
-            art.Music = "/music/" + fromData.music + ".mp3";
+            if (fromData.music != "不要背景音乐")
+                art.Music = "/music/" + fromData.music + ".mp3";
             art.state = 1;
             art.qrCode = md5(date.ToString());
             art.time = date;

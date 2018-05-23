@@ -92,7 +92,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
         /// <returns></returns>
         public override IResponseMessageBase OnTextRequest(RequestMessageText requestMessage)
         {
-            
+
             //说明：实际项目中这里的逻辑可以交给Service处理具体信息，参考OnLocationRequest方法或/Service/LocationSercice.cs
             var responseMessage = base.CreateResponseMessage<ResponseMessageText>();
             log.Info(string.Format("日志记录:----处理文字请求", responseMessage.Content));
@@ -117,7 +117,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                      return responseMessage;
                  }).Keyword("root", () =>
                  {
-                     responseMessage.Content = "http://www.nbug.xin/Root/Index?openid="+ requestMessage.FromUserName;
+                     responseMessage.Content = "http://www.nbug.xin/Root/Index?openid=" + requestMessage.FromUserName;
                      return responseMessage;
                  }).Keyword("容错", () =>
                  {
@@ -132,7 +132,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                      var userInfo = UserApi.Info(appId, openId, Language.zh_CN);
                      responseMessage.Content = string.Format(
                          "您的OpenID为：{0}\r\n头像：{9}\r\n昵称：{1}\r\n性别：{2}\r\n地区（国家/省/市）：{3}/{4}/{5}\r\n关注时间：{6}\r\n关注状态：{7}\r\n您发送的消息是{8}",
-                         requestMessage.FromUserName, userInfo.nickname, (Sex)userInfo.sex, userInfo.country, userInfo.province, userInfo.city, DateTimeHelper.GetDateTimeFromXml(userInfo.subscribe_time), userInfo.subscribe, requestMessage.Content,userInfo.headimgurl);
+                         requestMessage.FromUserName, userInfo.nickname, (Sex)userInfo.sex, userInfo.country, userInfo.province, userInfo.city, DateTimeHelper.GetDateTimeFromXml(userInfo.subscribe_time), userInfo.subscribe, requestMessage.Content, userInfo.headimgurl);
                      return responseMessage;
                  }).Keyword("MUTE", () => //不回复任何消息
                  {
@@ -144,36 +144,36 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                      return responseMessage;
                  }).Default(() =>
                  {
-                     if (requestMessage.Content.Substring(0, 2) == "反馈")
+                     if (requestMessage.Content.Length>=2&&requestMessage.Content.Substring(0, 2) == "反馈")
                      {
-                         responseMessage.Content= "谢谢您的反馈，祝您生活愉快[愉快]，如有问题请联系WX:17600603214";
+                         responseMessage.Content = string.Format("谢谢您的反馈，祝您生活愉快[愉快] \r\n 如有问题请联系微信:17600603214");
                      }
                      else
                      {
                          var result = new StringBuilder();
-                         result.AppendFormat("您刚才发送了文字信息：{0}\r\n\r\n", requestMessage.Content);
-                         if (CurrentMessageContext.RequestMessages.Count > 1)
-                         {
-                             result.AppendFormat("您刚才还发送了如下消息（{0}/{1}）：\r\n", CurrentMessageContext.RequestMessages.Count,
-                                 CurrentMessageContext.StorageData);
-                             for (int i = CurrentMessageContext.RequestMessages.Count - 2; i >= 0; i--)
-                             {
-                                 var historyMessage = CurrentMessageContext.RequestMessages[i];
-                                 result.AppendFormat("{0} 【{1}】{2}\r\n",
-                                     historyMessage.CreateTime.ToString("HH:mm:ss"),
-                                     historyMessage.MsgType.ToString(),
-                                     (historyMessage is RequestMessageText)
-                                         ? (historyMessage as RequestMessageText).Content
-                                         : "[非文字类型]"
-                                     );
-                             }
-                             result.AppendLine("\r\n");
-                         }
-                         result.AppendFormat("如果您在{0}分钟内连续发送消息，记录将被自动保留（当前设置：最多记录{1}条）。过期后记录将会自动清除。\r\n",
-                             WeixinContext.ExpireMinutes, WeixinContext.MaxRecordCount);
-                         result.AppendLine("\r\n");
-                         result.AppendLine(
-                             "您还可以发送【位置】【图片】【语音】【视频】等类型的信息（注意是这几种类型，不是这几个文字），查看不同格式的回复。);");
+                         result.AppendFormat("您刚才发送了文字信息：{0}", requestMessage.Content);
+                         //if (CurrentMessageContext.RequestMessages.Count > 1)
+                         //{
+                         //    result.AppendFormat("您刚才还发送了如下消息（{0}/{1}）：\r\n", CurrentMessageContext.RequestMessages.Count,
+                         //        CurrentMessageContext.StorageData);
+                         //    for (int i = CurrentMessageContext.RequestMessages.Count - 2; i >= 0; i--)
+                         //    {
+                         //        var historyMessage = CurrentMessageContext.RequestMessages[i];
+                         //        result.AppendFormat("{0} 【{1}】{2}\r\n",
+                         //            historyMessage.CreateTime.ToString("HH:mm:ss"),
+                         //            historyMessage.MsgType.ToString(),
+                         //            (historyMessage is RequestMessageText)
+                         //                ? (historyMessage as RequestMessageText).Content
+                         //                : "[非文字类型]"
+                         //            );
+                         //    }
+                         //    result.AppendLine("\r\n");
+                         //}
+                         //result.AppendFormat("如果您在{0}分钟内连续发送消息，记录将被自动保留（当前设置：最多记录{1}条）。过期后记录将会自动清除。\r\n",
+                         //    WeixinContext.ExpireMinutes, WeixinContext.MaxRecordCount);
+                         //result.AppendLine("\r\n");
+                         //result.AppendLine(
+                         //    "您还可以发送【位置】【图片】【语音】【视频】等类型的信息（注意是这几种类型，不是这几个文字），查看不同格式的回复。);");
                          responseMessage.Content = result.ToString();
                      }
                      return responseMessage;
@@ -216,14 +216,14 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                     Title = "您刚才发送了图片信息",
                     Description = "您发送的图片将会显示在边上",
                     PicUrl = requestMessage.PicUrl,
-                    Url = "http://www.nbug.xin:5000/"
+                    Url = "http://www.nbug.xin/Home/Index"
                 });
                 responseMessage.Articles.Add(new Article()
                 {
                     Title = "第二条",
                     Description = "第二条带连接的内容",
                     PicUrl = requestMessage.PicUrl,
-                    Url = "http://www.nbug.xin:5000/"
+                    Url = "http://www.nbug.xin/Home/Index"
                 });
                 log.Info("日志记录:----处理多张图片请求完毕");
                 return responseMessage;
@@ -250,7 +250,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
             //var accessToken = Containers.AccessTokenContainer.TryGetAccessToken(appId, appSecret);
             var uploadResult = Senparc.Weixin.MP.AdvancedAPIs.MediaApi.UploadTemporaryMedia(appId, UploadMediaFileType.image,
                                                          Server.GetMapPath("~/Images/Logo.jpg"));
-            
+
             //设置音乐信息
             responseMessage.Music.Title = "天籁之音";
             responseMessage.Music.Description = "播放您上传的语音";
@@ -295,7 +295,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                 if (task.Exception != null)
                 {
                     //WeixinTrace.Log("OnVideoRequest()储存Video过程发生错误：", task.Exception.Message);
-                    log.Info("日志记录:----OnVideoRequest()储存Video过程发生错误"+ task.Exception.Message);
+                    log.Info("日志记录:----OnVideoRequest()储存Video过程发生错误" + task.Exception.Message);
                     var msg = string.Format("上传素材出错：{0}\r\n{1}",
                                task.Exception.Message,
                                task.Exception.InnerException != null
@@ -328,11 +328,65 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
             * var responseMessage = MessageAgent.RequestResponseMessage(agentUrl, agentToken, RequestDocument.ToString());
             * return responseMessage;
             */
-            var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]";
+            var responseMessage = CreateResponseMessage<ResponseMessageNews>();
+
+            responseMessage.Articles.Add(new Article()
+            {
+                Title = "“黑”科技【动态秀】带你掌握朋友圈的秘密",
+                Description = "各位朋友大家好，我是张龙，说起黑科技其实还差远了，微信用户群体那么多，决定发挥程序员优势要搞点事情。",
+                PicUrl = "http://www.nbug.xin/Images/art01.jpg",
+                Url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=1&sn=c54e232bd670f8145de83aa30d7846eb&chksm=7c25cf6b4b52467da1c5af7b30fbaa8225f2661446217ac9cb3b0fd496c37f681c6fbc07690e#rd"
+            });
+            responseMessage.Articles.Add(new Article()
+            {
+                Title = "制作及使用教程【动态秀】",
+                Description = "关注公众号，进入聊天窗口，左下角我有制作，随后达到个人中心。",
+                PicUrl = "http://www.nbug.xin/Images/art02.jpg",
+                Url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=2&sn=90d197cad452714467eac043177fb5ec&chksm=7c25cf6b4b52467d7dacb088ddb8d355fb865934e7bcaf298d30f9335fa1130bb2dc5d23861a#rd"
+            });
+            responseMessage.Articles.Add(new Article()
+            {
+                Title = "如何让12星座死心塌地爱上你？这些感情小套路还不收藏一下",
+                Description = "都说世上套路千千万，对付恋人占一半。我们在恋爱里总是会担心对方是否会真心以待，其实感情的问题很简单，可往往被我给复杂化了。那如何抓住12星座的心，让他们对你死心塌地呢？",
+                PicUrl = "http://www.nbug.xin/Images/art03.jpg",
+                Url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=3&sn=2e53c76261b60d23f1bf42533f5954a5&chksm=7c25cf6b4b52467dd80ea87a2dcd784530b40df7abf9384118fa0a8003358639076f66c86b7f#rd"
+            });
             return responseMessage;
         }
+        /// <summary>
+        /// 订阅（关注）事件
+        /// </summary>
+        /// <returns></returns>
+        public override IResponseMessageBase OnEvent_SubscribeRequest(RequestMessageEvent_Subscribe requestMessage)
+        {
+            var responseMessage = CreateResponseMessage<ResponseMessageNews>();
 
+            responseMessage.Articles.Add(new Article()
+            {
+                Title = "“黑”科技【动态秀】带你掌握朋友圈的秘密",
+                Description = "各位朋友大家好，我是张龙，说起黑科技其实还差远了，微信用户群体那么多，决定发挥程序员优势要搞点事情。",
+                PicUrl = "http://www.nbug.xin/Images/art01.jpg",
+                Url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=1&sn=c54e232bd670f8145de83aa30d7846eb&chksm=7c25cf6b4b52467da1c5af7b30fbaa8225f2661446217ac9cb3b0fd496c37f681c6fbc07690e#rd"
+            });
+            responseMessage.Articles.Add(new Article()
+            {
+                Title = "制作及使用教程【动态秀】",
+                Description = "关注公众号，进入聊天窗口，左下角我有制作，随后达到个人中心。",
+                PicUrl = "http://www.nbug.xin/Images/art02.jpg",
+                Url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=2&sn=90d197cad452714467eac043177fb5ec&chksm=7c25cf6b4b52467d7dacb088ddb8d355fb865934e7bcaf298d30f9335fa1130bb2dc5d23861a#rd"
+            });
+            responseMessage.Articles.Add(new Article()
+            {
+                Title = "如何让12星座死心塌地爱上你？这些感情小套路还不收藏一下",
+                Description = "都说世上套路千千万，对付恋人占一半。我们在恋爱里总是会担心对方是否会真心以待，其实感情的问题很简单，可往往被我给复杂化了。那如何抓住12星座的心，让他们对你死心塌地呢？",
+                PicUrl = "http://www.nbug.xin/Images/art03.jpg",
+                Url = "http://mp.weixin.qq.com/s?__biz=MzU1ODU3MDI1MA==&mid=100000014&idx=3&sn=2e53c76261b60d23f1bf42533f5954a5&chksm=7c25cf6b4b52467dd80ea87a2dcd784530b40df7abf9384118fa0a8003358639076f66c86b7f#rd"
+            });
+            return responseMessage;
+            //var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
+            //responseMessage.Content = "欢迎关注动态秀！全新动态交互方式的奇妙之旅，即刻起航！[奸笑]";
+            //return responseMessage;
+        }
         /// <summary>
         /// 点击事件
         /// </summary>
@@ -388,7 +442,7 @@ namespace Anker.Weixin.MP.CoreDynamicShow.CommonService.MessageHandlers.CustomMe
                         strongResponseMessage.Content = "您点击了个性化菜单按钮，您的微信性别设置为：女。";
                     }
                     break;
-                
+
                 default:
                     {
                         var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
