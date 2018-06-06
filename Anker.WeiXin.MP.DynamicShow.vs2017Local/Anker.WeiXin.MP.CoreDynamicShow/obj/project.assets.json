@@ -14102,11 +14102,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Show\\1.10\\Anker.WeiXin.MP.DynamicShow.vs2017Local\\Anker.WeiXin.MP.CoreDynamicShow\\Anker.WeiXin.MP.CoreDynamicShow.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Show\\Anker.WeiXin.MP.DynamicShow.vs2017Local\\Anker.WeiXin.MP.CoreDynamicShow\\Anker.WeiXin.MP.CoreDynamicShow.csproj",
       "projectName": "Anker.WeiXin.MP.CoreDynamicShow",
-      "projectPath": "C:\\Users\\Administrator\\Desktop\\Show\\1.10\\Anker.WeiXin.MP.DynamicShow.vs2017Local\\Anker.WeiXin.MP.CoreDynamicShow\\Anker.WeiXin.MP.CoreDynamicShow.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\Show\\Anker.WeiXin.MP.DynamicShow.vs2017Local\\Anker.WeiXin.MP.CoreDynamicShow\\Anker.WeiXin.MP.CoreDynamicShow.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\Desktop\\Show\\1.10\\Anker.WeiXin.MP.DynamicShow.vs2017Local\\Anker.WeiXin.MP.CoreDynamicShow\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\Show\\Anker.WeiXin.MP.DynamicShow.vs2017Local\\Anker.WeiXin.MP.CoreDynamicShow\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

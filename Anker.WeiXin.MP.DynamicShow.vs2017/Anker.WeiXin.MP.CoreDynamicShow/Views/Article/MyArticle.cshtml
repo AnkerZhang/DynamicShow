@@ -59,6 +59,10 @@
                         {
                             <td><a href="/Home/Index">查看动态</a></td>
                         }
+                        else if (Model[i].qrCode=="1")
+                        {
+                            <td><a href="/Game/Index">查看动态</a></td>
+                        }
                         else if (Model[i].author != null && Model[i].author != "")
                         {
                             <td><a href="/Show/Index?art=@Model[i].qrCode">查看动态</a></td>
